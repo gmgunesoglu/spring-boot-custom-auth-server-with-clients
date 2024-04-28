@@ -1,0 +1,22 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: client
+  output.ansi.enabled: ALWAYS
+  security:
+    oauth2:
+      client:
+        provider:
+          spring:
+            issuer-uri: http://localhost:8080
+        registration:
+          reg-client:
+            provider: spring
+            client-id: client_id2
+            client-secret: "client_secret2"
+#            client-secret: "secret"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_basic
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: user.read,openid
