@@ -8,3 +8,13 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8080
+
+logging:
+  level:
+    org.springframework.security: trace
+
+resource-server:
+  client:
+    id: client_id2
+    secret: client_secret2
+    access-token-uri: http://localhost:8080/oauth2/token
