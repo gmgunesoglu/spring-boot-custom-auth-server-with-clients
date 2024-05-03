@@ -1,5 +1,5 @@
 server:
-  port: 8181
+  port: 8080
 spring:
   application:
     name: resource-server
@@ -7,14 +7,9 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080
+          issuer-uri: http://localhost:8000
+          jwk-set-uri: http://localhost:8000/.well-known/jwks.json
 
 logging:
   level:
     org.springframework.security: trace
-
-resource-server:
-  client:
-    id: client_id2
-    secret: client_secret2
-    access-token-uri: http://localhost:8080/oauth2/token

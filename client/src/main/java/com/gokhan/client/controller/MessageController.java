@@ -35,7 +35,7 @@ public class MessageController {
 
         HttpEntity<String> entity = new HttpEntity<>(httpHeaders);
         ResponseEntity<String> response =
-                restTemplate.exchange("http://localhost:8181/hello", HttpMethod.GET, entity, String.class);
+                restTemplate.exchange("http://localhost:8080/hello", HttpMethod.GET, entity, String.class);
 
         return "Success  :: " + response.getBody();
     }

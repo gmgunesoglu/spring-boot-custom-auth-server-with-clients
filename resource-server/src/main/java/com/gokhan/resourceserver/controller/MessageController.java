@@ -1,5 +1,6 @@
 package com.gokhan.resourceserver.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,5 +21,11 @@ public class MessageController {
         System.out.println("getClaims: "+jwt.getClaims());
 
         return "Hello from resource server";
+    }
+
+//    @PreAuthorize("hasAnyAuthority('SCOPE_user.read')")
+    @GetMapping("/test")
+    public String test() {
+        return "test ok";
     }
 }
