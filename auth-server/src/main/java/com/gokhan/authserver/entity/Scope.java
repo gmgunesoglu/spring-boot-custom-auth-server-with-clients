@@ -1,6 +1,5 @@
 package com.gokhan.authserver.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,17 +11,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Role {
+public class Scope {
 
     @Id
     @SequenceGenerator(
-            name = "client_seq",
-            sequenceName = "client_seq",
+            name = "scope_seq",
+            sequenceName = "scope_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "client_seq"
+            generator = "scope_seq"
     )
     @Column(
             name = "id",
@@ -42,10 +41,6 @@ public class Role {
             nullable = false
     )
     private Long realmId;
-
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<User> users;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Permission> permissions;

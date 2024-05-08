@@ -1,5 +1,6 @@
 package com.gokhan.authserver.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
+@JsonSerialize
 public class User implements UserDetails, Principal {
 
     @Id
@@ -64,7 +66,13 @@ public class User implements UserDetails, Principal {
     )
     private boolean accountLocked;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @Column(
+            name = "realm_id",
+            nullable = false
+    )
+    private Long realmId;
+
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Role> roles;
 
     @Override

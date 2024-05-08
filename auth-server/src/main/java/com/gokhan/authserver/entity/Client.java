@@ -130,4 +130,10 @@ public class Client implements Serializable {
     )
     private String tokenSettings;
 
+    @Column(
+            name = "realm_id",
+            nullable = false
+    )
+    private Long realmId;
+
 }
