@@ -4,8 +4,7 @@ import com.gokhan.authserver.dto.UserRegisterDto;
 import com.gokhan.authserver.entity.User;
 import com.gokhan.authserver.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +15,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final JwtDecoder jwtDecoder;
 
     @PostMapping
     public User add(@RequestBody UserRegisterDto userRegisterDto) {
@@ -41,7 +41,6 @@ public class UserController {
     public User delete(@PathVariable Long id) {
         return userService.delete(id);
     }
-
 
 //    @GetMapping
 //    public String loadUsers(){

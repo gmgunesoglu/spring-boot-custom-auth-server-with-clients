@@ -6,22 +6,19 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.http.HttpRequest;
+
 @RestController
 public class MessageController {
 
     @GetMapping("/hello")
-    public String hello(@AuthenticationPrincipal Jwt jwt) {
-        System.out.println("[jwt] = "+jwt.toString());
-        System.out.println("getIssuer: "+jwt.getIssuer());
-        System.out.println("getAudience: "+jwt.getAudience());
-        System.out.println("getExpiresAt: "+jwt.getExpiresAt());
-        System.out.println("getIssuedAt: "+jwt.getIssuedAt());
-        System.out.println("getNotBefore: "+jwt.getNotBefore());
-        System.out.println("getIssuedAt: "+jwt.getIssuedAt());
-        System.out.println("getClaims: "+jwt.getClaims());
+    public String hello() {
+
 
         return "Hello from resource server";
     }
+
+
 
 //    @PreAuthorize("hasAnyAuthority('SCOPE_user.read')")
     @GetMapping("/test")
