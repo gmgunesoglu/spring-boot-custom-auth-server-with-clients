@@ -12,20 +12,20 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(
-        name = "permission",
+        name = "policy",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"uri", "method"})}
 )
-public class Permission {
+public class Policy {
 
     @Id
     @SequenceGenerator(
-            name = "realm_seq",
-            sequenceName = "realm_seq",
+            name = "policy_seq",
+            sequenceName = "policy_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "realm_seq"
+            generator = "policy_seq"
     )
     @Column(
             name = "id",
@@ -40,10 +40,10 @@ public class Permission {
     private Long realmId;
 
     @Column(
-            name = "path",
+            name = "base_url_id",
             nullable = false
     )
-    private String path;
+    private Long baseUrlId;
 
     @Column(
             name = "uri",
