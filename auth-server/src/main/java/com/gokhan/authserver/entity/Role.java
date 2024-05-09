@@ -12,17 +12,21 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(
+        name = "role",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "realm_id"})}
+)
 public class Role {
 
     @Id
     @SequenceGenerator(
-            name = "client_seq",
-            sequenceName = "client_seq",
+            name = "role_seq",
+            sequenceName = "role_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "client_seq"
+            generator = "role_seq"
     )
     @Column(
             name = "id",
@@ -47,6 +51,6 @@ public class Role {
     @JsonIgnore
     private List<User> users;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Permission> permissions;
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    private List<Policy> policies;
 }

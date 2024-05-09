@@ -42,6 +42,6 @@ public class Scope {
     )
     private Long realmId;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Permission> permissions;
+    @ManyToMany(mappedBy = "scopes", fetch = FetchType.LAZY)
+    private List<Policy> policies;
 }

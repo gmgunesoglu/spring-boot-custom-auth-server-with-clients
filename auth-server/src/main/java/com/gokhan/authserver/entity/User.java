@@ -6,8 +6,6 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.io.Serializable;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +17,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "realm_id"})}
+)
 @JsonSerialize
 public class User implements UserDetails, Principal {
 

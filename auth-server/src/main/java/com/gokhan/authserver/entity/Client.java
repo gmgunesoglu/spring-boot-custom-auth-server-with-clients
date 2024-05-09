@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "oauth2_registered_client")
+@Table(name = "client")
 public class Client implements Serializable {
 
     @Id
