@@ -37,15 +37,19 @@ public class Role {
     @Column(
             name = "name",
             nullable = false,
-            length = 50
+            length = 30
     )
     private String name;
 
-    @Column(
-            name = "realm_id",
-            nullable = false
-    )
-    private Long realmId;
+//    @Column(
+//            name = "realm_id",
+//            nullable = false
+//    )
+//    private Long realmId;
+
+    @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "realm_id")
+    private Realm realm;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     @JsonIgnore

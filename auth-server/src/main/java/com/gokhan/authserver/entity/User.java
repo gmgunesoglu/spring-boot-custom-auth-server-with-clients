@@ -67,14 +67,11 @@ public class User implements UserDetails, Principal {
     )
     private boolean accountLocked;
 
-    @Column(
-            name = "realm_id",
-            nullable = false
-    )
-    private Long realmId;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Role> roles;
+//    @Column(
+//            name = "realm_id",
+//            nullable = false
+//    )
+//    private Long realmId;
 
     @Override
     public String getName() {
@@ -117,4 +114,12 @@ public class User implements UserDetails, Principal {
     public boolean isEnabled() {
         return enabled;
     }
+
+    @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "realm_id")
+    private Realm realm;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Role> roles;
+
 }

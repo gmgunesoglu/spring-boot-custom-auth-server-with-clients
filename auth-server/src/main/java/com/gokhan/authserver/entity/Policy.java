@@ -13,9 +13,9 @@ import java.util.List;
 @Entity
 @Table(
         name = "policy",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"uri", "method"})}
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"end_point_id", "policy_scopes_id", "policy_methods_id"})}
 )
-public class Policy {
+public class    Policy {
 
     @Id
     @SequenceGenerator(
@@ -33,33 +33,42 @@ public class Policy {
     )
     private Long id;
 
-    @Column(
-            name = "realm_id",
-            nullable = false
-    )
-    private Long realmId;
+//    @Column(
+//            name = "realm_id",
+//            nullable = false
+//    )
+//    private Long realmId;
+
+//    @Column(
+//            name = "end_point_id",
+//            nullable = false
+//    )
+//    private Long endPointId;
 
     @Column(
-            name = "base_url_id",
+            name = "policy_scopes_id",
             nullable = false
     )
-    private Long baseUrlId;
+    private Long policyScopesId;
 
     @Column(
-            name = "uri",
+            name = "policy_methods_id",
             nullable = false
     )
-    private String uri;
+    private Long policyMethodsId;
 
-    @Column(
-            name = "method",
-            nullable = false
-    )
-    private String method;
+    @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "realm_id")
+    private Realm realm;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Scope> scopes;
+
+    @ManyToOne(targetEntity = EndPoint.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "end_point_id")
+    private EndPoint endPoint;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Role> roles;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Scope> scopes;
 }

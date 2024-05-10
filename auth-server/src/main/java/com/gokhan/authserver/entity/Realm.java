@@ -3,6 +3,7 @@ package com.gokhan.authserver.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.lang.annotation.Target;
 import java.util.List;
 
 @Getter
@@ -33,28 +34,41 @@ public class Realm {
     )
     private Long id;
 
-    @Column(
-            name = "super_user_id",
-            nullable = false,
-            updatable = false
-    )
-    private Long superUserId;
+//    @Column(
+//            name = "super_user_id",
+//            nullable = false,
+//            updatable = false
+//    )
+//    private Long superUserId;
 
     @Column(
             name = "name",
-            nullable = false
+            nullable = false,
+            length = 30
     )
     private String name;
 
-    @OneToMany(targetEntity = User.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = SuperUser.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "super_user_id")
+    private SuperUser superUser;
+
+    @OneToMany(targetEntity = ResourceServer.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "realm_id", referencedColumnName = "id")
-    private List<User> users;
+    private List<ResourceServer> resourceServers;
+
+    @OneToMany(targetEntity = Policy.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "realm_id", referencedColumnName = "id")
+    private List<Policy> policies;
+
+    @OneToMany(targetEntity = Scope.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "realm_id", referencedColumnName = "id")
+    private List<Scope> scopes;
 
     @OneToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "realm_id", referencedColumnName = "id")
     private List<Role> roles;
 
-    @OneToMany(targetEntity = Client.class, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "realm_id", referencedColumnName = "id")
-    private List<Client> clients;
+    private List<User> users;
 }
