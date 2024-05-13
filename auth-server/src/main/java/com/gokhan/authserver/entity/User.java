@@ -118,7 +118,7 @@ public class User implements UserDetails, Principal {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Role> roles;
 
-    @OneToOne(mappedBy = "superUsers")
+    @OneToOne(mappedBy = "superUser")
     private Realm realm;
 
     @ManyToOne(targetEntity = Client.class, fetch = FetchType.LAZY)

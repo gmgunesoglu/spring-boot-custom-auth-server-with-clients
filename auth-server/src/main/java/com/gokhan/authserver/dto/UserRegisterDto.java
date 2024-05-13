@@ -11,5 +11,6 @@ public class UserRegisterDto {
 
     private String username;
     private String password;
-    private List<UserRole> roles;
+    private List<String> roles;
+    private String clientName;
 }

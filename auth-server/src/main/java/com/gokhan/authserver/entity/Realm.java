@@ -38,13 +38,13 @@ public class Realm {
     )
     private String name;
 
-    @Column(
-            name = "user_id",
-            nullable = false,
-            updatable = false,
-            unique = true
-    )
-    private Long userId;
+//    @Column(
+//            name = "user_id",
+//            nullable = false,
+//            updatable = false,
+//            unique = true
+//    )
+//    private Long userId;
 
 
 
@@ -52,9 +52,9 @@ public class Realm {
 //    @JoinColumn(name = "user_id")
 //    private User user;
 
-    @OneToMany(targetEntity = Client.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "realm_id", referencedColumnName = "id")
-    private List<Client> clients;
+//    @OneToOne(targetEntity = Client.class, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "id", referencedColumnName = "realm_id")
+//    private Client client;
 
 //    @OneToMany(targetEntity = Policy.class, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "realm_id", referencedColumnName = "id")
@@ -70,5 +70,5 @@ public class Realm {
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "super_user_id", referencedColumnName = "id")
-    private User superUsers;
+    private User superUser;
 }
