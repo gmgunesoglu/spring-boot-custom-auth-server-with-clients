@@ -2,28 +2,10 @@ package com.gokhan.authserver.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
-import org.springframework.security.oauth2.server.authorization.util.SpringAuthorizationServerVersion;
 
 import java.io.Serializable;
-import java.security.Principal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 
 @Getter
 @Setter
@@ -31,7 +13,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "client")
+@Table(
+        name = "client",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"realm_id", "client_id"})}
+)
 public class Client implements Serializable {
 
     @Id
@@ -50,10 +35,17 @@ public class Client implements Serializable {
     )
     private Long id;
 
+//    @Column(
+//            name = "realm_id",
+//            nullable = false,
+//            updatable = false
+//    )
+//    private Long realmId;
+
     @Column(
             name = "client_id",
-            unique = true,
             nullable = false,
+            updatable = false,
             length = 100
     )
     private String clientId;
@@ -63,6 +55,13 @@ public class Client implements Serializable {
             nullable = false
     )
     private Date clientIdIssuedAt;
+
+    @Column(
+            name = "base_url",
+            nullable = false,
+            unique = true
+    )
+    private String baseUrl;
 
     @Column(
             name = "client_secret",
@@ -130,10 +129,15 @@ public class Client implements Serializable {
     )
     private String tokenSettings;
 
-    @Column(
-            name = "realm_id",
-            nullable = false
-    )
-    private Long realmId;
+    @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "realm_id")
+    private Realm realm;
 
+    @OneToMany(targetEntity = ResourceServer.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    private List<ResourceServer> resourceServers;
+
+    @OneToMany(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    private List<User> users;
 }

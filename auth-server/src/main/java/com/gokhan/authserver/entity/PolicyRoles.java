@@ -2,7 +2,6 @@ package com.gokhan.authserver.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Immutable;
 
 @Getter
 @Setter
@@ -10,32 +9,26 @@ import org.hibernate.annotations.Immutable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "method")
-@Immutable
-public class Method {
+@Table(
+        name = "policy_roles",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"policies_id", "roles_id"})}
+)
+public class PolicyRoles {
+
 
     @Id
     @SequenceGenerator(
-            name = "method_seq",
-            sequenceName = "method_seq",
+            name = "policy_roles_seq",
+            sequenceName = "policy_roles_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "method_seq"
+            generator = "policy_roles_seq"
     )
     @Column(
             name = "id",
             updatable = false
     )
     private Long id;
-
-    @Column(
-            name = "name",
-            nullable = false,
-            length = 7
-    )
-    @Enumerated(EnumType.STRING)
-    private MethodType name;
-
 }

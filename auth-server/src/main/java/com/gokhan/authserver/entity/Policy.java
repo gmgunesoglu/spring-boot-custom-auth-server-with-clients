@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(
         name = "policy",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"end_point_id", "policy_scopes_id", "policy_methods_id"})}
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"resource_server_id", "uri", "method_type"})}
 )
 public class    Policy {
 
@@ -34,41 +34,39 @@ public class    Policy {
     private Long id;
 
 //    @Column(
-//            name = "realm_id",
+//            name = "resource_server_id",
 //            nullable = false
 //    )
-//    private Long realmId;
-
-//    @Column(
-//            name = "end_point_id",
-//            nullable = false
-//    )
-//    private Long endPointId;
+//    private Long resourceServerId;
 
     @Column(
-            name = "policy_scopes_id",
+            name = "uri",
             nullable = false
     )
-    private Long policyScopesId;
+    private String uri;
 
     @Column(
-            name = "policy_methods_id",
+            name = "method_type",
             nullable = false
     )
-    private Long policyMethodsId;
+    private MethodType methodType;
 
-    @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "realm_id")
-    private Realm realm;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Scope> scopes;
-
-    @ManyToOne(targetEntity = EndPoint.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "end_point_id")
-    private EndPoint endPoint;
+//    @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "realm_id")
+//    private Realm realm;
+//
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    private List<Scope> scopes;
+//
+//    @ManyToOne(targetEntity = EndPoint.class, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "end_point_id")
+//    private EndPoint endPoint;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Role> roles;
+
+    @ManyToOne(targetEntity = ResourceServer.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "resource_server_id")
+    private ResourceServer resourceServer;
 
 }

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(
         name = "users",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "realm_id"})}
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "client_id"})}
 )
 @JsonSerialize
 public class User implements UserDetails, Principal {
@@ -55,6 +55,11 @@ public class User implements UserDetails, Principal {
     )
     private String password;
 
+//    @Column(
+//            name = "client_id"
+//    )
+//    private Long clientId;
+
     @Column(
             name = "enabled",
             nullable = false
@@ -67,11 +72,6 @@ public class User implements UserDetails, Principal {
     )
     private boolean accountLocked;
 
-//    @Column(
-//            name = "realm_id",
-//            nullable = false
-//    )
-//    private Long realmId;
 
     @Override
     public String getName() {
@@ -115,11 +115,13 @@ public class User implements UserDetails, Principal {
         return enabled;
     }
 
-    @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "realm_id")
-    private Realm realm;
-
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Role> roles;
 
+    @OneToOne(mappedBy = "superUsers")
+    private Realm realm;
+
+    @ManyToOne(targetEntity = Client.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    private Client client;
 }

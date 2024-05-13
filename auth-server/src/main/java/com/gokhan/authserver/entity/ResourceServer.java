@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(
         name = "resource_server",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"realm_id", "name"})}
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"client_id", "name"})}
 )
 public class ResourceServer {
 
@@ -34,10 +34,10 @@ public class ResourceServer {
     private Long id;
 
 //    @Column(
-//            name = "realm_id",
+//            name = "client_id",
 //            nullable = false
 //    )
-//    private String realmId;
+//    private Long clientId;
 
     @Column(
             name = "name",
@@ -47,20 +47,24 @@ public class ResourceServer {
     private String name;
 
     @Column(
-            name = "base_ulr",
+            name = "base_url",
             nullable = false,
             unique = true
     )
-    public String baseUrl;
+    private String baseUrl;
 
-    @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "realm_id")
-    private Realm realm;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Scope> scopes;
-
-    @OneToMany(targetEntity = EndPoint.class, fetch = FetchType.LAZY)
+//    @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "realm_id")
+//    private Realm realm;
+//
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    private List<Scope> scopes;
+//
+    @OneToMany(targetEntity = Policy.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "resource_server_id", referencedColumnName = "id")
-    private List<EndPoint> endPoints;
+    private List<Policy> endPoints;
+
+    @ManyToOne(targetEntity = Client.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    private Client client;
 }
