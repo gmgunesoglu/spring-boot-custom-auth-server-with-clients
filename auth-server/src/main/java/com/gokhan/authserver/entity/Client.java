@@ -129,8 +129,8 @@ public class Client implements Serializable {
     )
     private String tokenSettings;
 
-    @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "realm_id")
+    @OneToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "realm_id", referencedColumnName = "id")
     private Realm realm;
 
     @OneToMany(targetEntity = ResourceServer.class, fetch = FetchType.LAZY)

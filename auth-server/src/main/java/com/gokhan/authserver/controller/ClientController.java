@@ -21,17 +21,12 @@ public class ClientController {
     }
 
     @GetMapping
-    public List<Client> list() {
+    public List<Client> getAll() {
         return clientService.getAll();
     }
 
     @GetMapping("/{id}")
     public Client get(@PathVariable String id) {
-        try {
-            long parsedId = Long.parseLong(id);
-            return clientService.findById(parsedId);
-        } catch (NumberFormatException e) {
-            return clientService.findClientByClientId(id);
-        }
+        return clientService.findClientByClientId(id);
     }
 }

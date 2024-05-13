@@ -1,7 +1,6 @@
 package com.gokhan.authserver.service;
 
 import com.gokhan.authserver.dto.UserRegisterDto;
-import com.gokhan.authserver.dto.UserRole;
 import com.gokhan.authserver.entity.Role;
 import com.gokhan.authserver.entity.User;
 import com.gokhan.authserver.repository.RoleRepository;
@@ -34,9 +33,9 @@ public class UserServiceImpl implements UserService {
 
         // Role nesnelerini oluşturup kaydetme
         List<Role> roles = new ArrayList<>();
-        for(UserRole userRole : userRegisterDto.getRoles()) {
-            Role role = roleRepository.findByName(userRole.toString()).orElseThrow(
-                    () -> new UsernameNotFoundException("Role " + userRole.toString() + " not found")
+        for(String strRole : userRegisterDto.getRoles()) {
+            Role role = roleRepository.findByName(strRole).orElseThrow(
+                    () -> new UsernameNotFoundException("Role " + strRole + " not found")
             );
             roles.add(role);
         }
