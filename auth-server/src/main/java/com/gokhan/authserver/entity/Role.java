@@ -3,6 +3,7 @@ package com.gokhan.authserver.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 
@@ -16,7 +17,12 @@ import java.util.List;
         name = "role",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "realm_id"})}
 )
-public class Role {
+public class Role implements GrantedAuthority {
+
+    @Override
+    public String getAuthority() {
+        return this.getName();
+    }
 
     @Id
     @SequenceGenerator(

@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class RequestDto {
     private String uri;
+    private String baseUrl;
     private String method;
     private String token;
 }

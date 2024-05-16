@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -81,9 +82,11 @@ public class User implements UserDetails, Principal {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map(
-                r -> new SimpleGrantedAuthority(r.getName())
-        ).collect(Collectors.toList());
+        return this.roles;
+
+//        return this.roles.stream().map(
+//                r -> new SimpleGrantedAuthority(r.getName())
+//        ).collect(Collectors.toList());
     }
 
     @Override
@@ -116,7 +119,7 @@ public class User implements UserDetails, Principal {
         return enabled;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
     @OneToOne(mappedBy = "superUser")

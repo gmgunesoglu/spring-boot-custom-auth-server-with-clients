@@ -19,4 +19,6 @@ public interface ResourceServerRepository extends JpaRepository<ResourceServer,L
     List<ResourceServerDto> listResourceServerDto();
 
     Optional<ResourceServer> findByNameAndClient(String name, Client client);
+
+    Optional<ResourceServer> findByBaseUrl(String baseUrl);
 }

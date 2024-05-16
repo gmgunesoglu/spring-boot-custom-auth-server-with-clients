@@ -35,10 +35,11 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
             String token = authorizationHeader.substring(7);
             RequestDto requestDto = RequestDto.builder()
                     .uri(request.getRequestURI())
+                    .baseUrl("http://localhost:8080")
                     .method(request.getMethod())
                     .token(token).build();
 
-            ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:8000/authorizations/check", requestDto, String.class);
+            ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:8000/authorizations/check-token", requestDto, String.class);
             Authentication authentication;
             if (result.getStatusCode() == HttpStatus.OK){
                 authentication = provider.authenticate(new CustomAuthentication(true, "headerKey"));

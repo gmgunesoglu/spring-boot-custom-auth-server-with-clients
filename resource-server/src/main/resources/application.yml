@@ -16,14 +16,15 @@ spring:
         registration:
           reg-client:
             provider: spring
-            client-id: client_id
+            client-id: name
             client-secret: "client_secret"
             #            client-secret: "secret"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_basic
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope: user.read,openid
+            scope: scope
+#            scope: user.read,openid
 
 logging:
   level:
-    org.springframework.security: trace
+    org.springframework.security: error
