@@ -71,4 +71,8 @@ public class Realm {
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "super_user_id", referencedColumnName = "id")
     private User superUser;
+
+    @OneToOne(targetEntity = Client.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "realm_id")
+    private Client client;
 }

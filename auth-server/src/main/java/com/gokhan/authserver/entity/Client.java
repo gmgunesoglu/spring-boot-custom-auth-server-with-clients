@@ -13,10 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(
-        name = "client",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"realm_id", "client_id"})}
-)
+@Table(name = "client")
 public class Client implements Serializable {
 
     @Id
@@ -42,13 +39,13 @@ public class Client implements Serializable {
 //    )
 //    private Long realmId;
 
-    @Column(
-            name = "client_id",
-            nullable = false,
-            updatable = false,
-            length = 100
-    )
-    private String clientId;
+//    @Column(
+//            name = "client_id",
+//            nullable = false,
+//            updatable = false,
+//            length = 100
+//    )
+//    private String clientId;
 
     @Column(
             name = "client_id_issued_at",
@@ -74,11 +71,12 @@ public class Client implements Serializable {
     private Date clientSecretExpiresAt;
 
     @Column(
-            name = "client_name",
+            name = "name",
             nullable = false,
-            length = 200
+            length = 50,
+            unique = true
     )
-    private String clientName;
+    private String name;
 
     @Column(
             name = "client_authentication_methods",
@@ -111,7 +109,7 @@ public class Client implements Serializable {
     @Column(
             name = "scopes",
             nullable = false,
-            length = 1000
+            length = 100
     )
     private String scopes;
 
@@ -130,7 +128,7 @@ public class Client implements Serializable {
     private String tokenSettings;
 
     @OneToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "realm_id", referencedColumnName = "id")
+    @JoinColumn(name = "realm_id", referencedColumnName = "id", updatable = false, unique = true)
     private Realm realm;
 
     @OneToMany(targetEntity = ResourceServer.class, fetch = FetchType.LAZY)

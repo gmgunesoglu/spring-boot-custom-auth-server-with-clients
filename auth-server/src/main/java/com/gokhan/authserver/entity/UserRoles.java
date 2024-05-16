@@ -30,4 +30,12 @@ public class UserRoles {
             updatable = false
     )
     private Long id;
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "users_id", referencedColumnName = "id")
+    private User user;
+
+    @ManyToOne(targetEntity = Role.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "roles_id", referencedColumnName = "id")
+    private Role role;
 }

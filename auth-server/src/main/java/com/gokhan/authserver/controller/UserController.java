@@ -1,6 +1,6 @@
 package com.gokhan.authserver.controller;
 
-import com.gokhan.authserver.dto.UserRegisterDto;
+import com.gokhan.authserver.dto.user.*;
 import com.gokhan.authserver.entity.User;
 import com.gokhan.authserver.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,30 +15,41 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final JwtDecoder jwtDecoder;
+//    private final JwtDecoder jwtDecoder;
+
+    @PostMapping("/super-user")
+    public UserDetailDto addSuperUser(@RequestBody SuperUserRegisterDto superUserRegisterDto) {
+        return userService.addSuperUser(superUserRegisterDto);
+    }
 
     @PostMapping
-    public User add(@RequestBody UserRegisterDto userRegisterDto) {
+    public UserDetailDto add(@RequestBody UserRegisterDto userRegisterDto) {
         return userService.add(userRegisterDto);
     }
 
     @GetMapping
-    public List<User> getAll() {
+    public List<UserDto> getAll() {
         return userService.getAll();
     }
 
     @GetMapping("/{id}")
-    public User get(@PathVariable Long id) {
+    public UserDetailDto get(@PathVariable Long id) {
         return userService.get(id);
     }
 
     @PutMapping("/{id}")
     public User update(@PathVariable Long id, @RequestBody User user) {
-        return userService.update(id, user);
+        return null;
     }
 
+    @PostMapping("/{id}/set-roles")
+    public UserDetailDto setRoles(@PathVariable Long id, @RequestBody UserSetRoleDto userSetRoleDto) {
+        return userService.setRoles(id, userSetRoleDto);
+    }
+
+    // TODO -> silme işlemleri ile ilgili iş lojiği henüz düşünülmedi
     @DeleteMapping("/{id}")
-    public User delete(@PathVariable Long id) {
+    public UserDetailDto delete(@PathVariable Long id) {
         return userService.delete(id);
     }
 

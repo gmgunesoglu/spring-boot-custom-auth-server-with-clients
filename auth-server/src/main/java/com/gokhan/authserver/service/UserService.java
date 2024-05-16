@@ -1,6 +1,6 @@
 package com.gokhan.authserver.service;
 
-import com.gokhan.authserver.dto.UserRegisterDto;
+import com.gokhan.authserver.dto.user.*;
 import com.gokhan.authserver.entity.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -8,13 +8,19 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-    User add(UserRegisterDto userRegisterDto);
+    UserDetailDto addSuperUser(SuperUserRegisterDto superUserRegisterDto);
 
-    List<User> getAll();
+    UserDetailDto add(UserRegisterDto userRegisterDto);
 
-    User get(Long id);
+    List<UserDto> getAll();
+
+    UserDetailDto get(Long id);
 
     User update(Long id, User user);
 
-    User delete(Long id);
+    UserDetailDto setRoles(Long id, UserSetRoleDto userSetRoleDto);
+
+    UserDetailDto delete(Long id);
+
+
 }

@@ -1,12 +1,12 @@
-package com.gokhan.authserver.dto;
+package com.gokhan.authserver.dto.user;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-@Setter
 public class UserRegisterDto {
 
     private String username;

@@ -64,7 +64,7 @@ public class SecurityConfig {
         return jwkSource;
     }
 
-        @Bean
+    @Bean
     @Order(1)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
@@ -97,14 +97,18 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
             throws Exception {
         http
-//                .cors(Customizer.withDefaults())
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req.requestMatchers(
-//                        "/oauth2/**",
+                        "/oauth2/**",
                         "/users/**",
                         "/clients/**",
-                        "/authorizations/**"
-                ).permitAll())
+                        "/authorizations/**",
+                        "/realms/**",
+                        "/roles/**",
+                        "/resource-servers/**",
+                        "/policies/**"
+                        ).permitAll())
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().authenticated()
                 )

@@ -62,7 +62,7 @@ public class ResourceServer {
 //
     @OneToMany(targetEntity = Policy.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "resource_server_id", referencedColumnName = "id")
-    private List<Policy> endPoints;
+    private List<Policy> policies;
 
     @ManyToOne(targetEntity = Client.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")

@@ -44,7 +44,8 @@ public class User implements UserDetails, Principal {
             name = "username",
             nullable = false,
             length = 50,
-            unique = true
+            unique = true,
+            updatable = false
     )
     private String username;
 

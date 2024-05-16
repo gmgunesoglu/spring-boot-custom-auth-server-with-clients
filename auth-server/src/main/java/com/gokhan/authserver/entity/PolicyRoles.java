@@ -15,7 +15,6 @@ import lombok.*;
 )
 public class PolicyRoles {
 
-
     @Id
     @SequenceGenerator(
             name = "policy_roles_seq",
@@ -31,4 +30,12 @@ public class PolicyRoles {
             updatable = false
     )
     private Long id;
+
+    @ManyToOne(targetEntity = Policy.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "policies_id", referencedColumnName = "id")
+    private Policy policy;
+
+    @ManyToOne(targetEntity = Role.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "roles_id", referencedColumnName = "id")
+    private Role role;
 }

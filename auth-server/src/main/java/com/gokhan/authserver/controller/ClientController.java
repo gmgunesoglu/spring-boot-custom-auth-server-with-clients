@@ -1,6 +1,9 @@
 package com.gokhan.authserver.controller;
 
-import com.gokhan.authserver.dto.ClientRegisterDto;
+import com.gokhan.authserver.dto.client.ClientDetailDto;
+import com.gokhan.authserver.dto.client.ClientDto;
+import com.gokhan.authserver.dto.client.ClientRegisterDto;
+import com.gokhan.authserver.dto.client.ClientUpdateDto;
 import com.gokhan.authserver.entity.Client;
 import com.gokhan.authserver.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -16,17 +19,28 @@ public class ClientController {
     private final ClientService clientService;
 
     @PostMapping
-    public Client add(@RequestBody ClientRegisterDto clientRegisterDto) {
+    public ClientDetailDto add(@RequestBody ClientRegisterDto clientRegisterDto) {
         return clientService.add(clientRegisterDto);
     }
 
     @GetMapping
-    public List<Client> getAll() {
+    public List<ClientDto> getAll() {
         return clientService.getAll();
     }
 
-    @GetMapping("/{id}")
-    public Client get(@PathVariable String id) {
-        return clientService.findClientByClientId(id);
+    @GetMapping("/{name}")
+    public ClientDetailDto get(@PathVariable String name) {
+        return clientService.findClientByName(name);
+    }
+
+    @PutMapping("/{name}")
+    public ClientDetailDto update(@PathVariable String name, @RequestBody ClientUpdateDto clientUpdateDto) {
+        return clientService.update(name, clientUpdateDto);
+    }
+
+    // TODO -> silme işlemleri ile ilgili iş lojiği henüz düşünülmedi
+    @DeleteMapping("/{clientId}")
+    public ClientDetailDto delete(@PathVariable String clientId) {
+        return clientService.delete(clientId);
     }
 }
