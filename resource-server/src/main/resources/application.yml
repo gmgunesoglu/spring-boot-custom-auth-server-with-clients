@@ -1,30 +1,15 @@
+logging:
+  level:
+    org.springframework.security: error
+
 server:
   port: 8080
 spring:
   application:
-    name: resource-server
+    name: demo_resource-server
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8000
           jwk-set-uri: http://localhost:8000/.well-known/jwks.json
-      client:
-        provider:
-          spring:
-            issuer-uri: http://localhost:8000
-        registration:
-          reg-client:
-            provider: spring
-            client-id: name
-            client-secret: "client_secret"
-            #            client-secret: "secret"
-            authorization-grant-type: authorization_code
-            client-authentication-method: client_secret_basic
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope: scope
-#            scope: user.read,openid
-
-logging:
-  level:
-    org.springframework.security: error

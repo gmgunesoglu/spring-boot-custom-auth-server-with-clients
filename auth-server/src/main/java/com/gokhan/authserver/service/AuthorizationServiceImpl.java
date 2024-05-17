@@ -43,9 +43,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         );
         for (Role role : policy.getRoles()) {
             if (authorities.contains(role.getName())) {
-                return "Authorized";
+                return "Authorized request";
             }
         }
-        return "Unauthorized";
+        throw new GlobalRuntimeException("Unauthorized request", HttpStatus.UNAUTHORIZED);
     }
 }

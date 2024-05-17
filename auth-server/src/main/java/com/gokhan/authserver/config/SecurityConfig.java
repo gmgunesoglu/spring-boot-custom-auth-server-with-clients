@@ -22,13 +22,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationCode;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+import org.springframework.security.oauth2.server.authorization.token.*;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -63,6 +66,35 @@ public class SecurityConfig {
         this.jwkSource = jwkSource;
         return jwkSource;
     }
+
+    @Bean
+    OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
+        return context -> {
+            Authentication principal = context.getPrincipal();
+            if (context.getTokenType().getValue().equals("id_token")) {
+                context.getClaims().claim("Test", "Test Id Token");
+            }
+            if (context.getTokenType().getValue().equals("access_token")) {
+                context.getClaims().claim("Test", "Test Access Token");
+                Set<String> authorities = principal.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+                context.getClaims().claim("authorities", authorities)
+                        .claim("user", principal.getName());
+            }
+        };
+    }
+
+
+//    @Bean
+//    public OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator(OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer) {
+//        NimbusJwtEncoder jwtEncoder = new NimbusJwtEncoder(jwkSource);
+//        JwtGenerator jwtGenerator = new JwtGenerator(jwtEncoder);
+//        jwtGenerator.setJwtCustomizer(tokenCustomizer);
+//        OAuth2AccessTokenGenerator accessTokenGenerator = new OAuth2AccessTokenGenerator();
+//        DelegatingOAuth2TokenGenerator generator = new DelegatingOAuth2TokenGenerator(jwtGenerator, accessTokenGenerator);
+//        generator.generate(jwkSource);
+//    }
+
 
     @Bean
     @Order(1)
@@ -119,22 +151,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
-        return context -> {
-            Authentication principal = context.getPrincipal();
-            if (context.getTokenType().getValue().equals("id_token")) {
-                context.getClaims().claim("Test", "Test Id Token");
-            }
-            if (context.getTokenType().getValue().equals("access_token")) {
-                context.getClaims().claim("Test", "Test Access Token");
-                Set<String> authorities = principal.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
-                context.getClaims().claim("authorities", authorities)
-                        .claim("user", principal.getName());
-            }
-        };
-    }
+
 
     private static KeyPair generateRsaKey() {
         KeyPair keyPair;

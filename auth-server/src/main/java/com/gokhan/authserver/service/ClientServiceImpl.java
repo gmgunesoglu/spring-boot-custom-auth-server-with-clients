@@ -59,7 +59,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public RegisteredClient findByClientId(String clientId) {   // clientId = name
+    public RegisteredClient findByClientId(String clientId) {   // clientId = demo_client
         Client client = clientRepository.findByName(clientId).orElseThrow(
                 () -> new UsernameNotFoundException("Client not found with clientId: " + clientId)
         );
@@ -84,7 +84,7 @@ public class ClientServiceImpl implements ClientService {
                         .add(clientRegisterDto.getPostLogoutRedirectUri()))
                 .scopes(scopes -> scopes
 //                        .addAll(clientRegisterDto.getScopes()))
-                        .add("scope")) //scopes disabled
+                        .add("openid")) //scopes disabled
                 .clientAuthenticationMethods(cam -> cam
                         .add(clientRegisterDto.getClientAuthenticationMethod()))
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
