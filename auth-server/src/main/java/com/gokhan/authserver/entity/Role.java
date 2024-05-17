@@ -19,11 +19,6 @@ import java.util.List;
 )
 public class Role implements GrantedAuthority {
 
-    @Override
-    public String getAuthority() {
-        return this.getName();
-    }
-
     @Id
     @SequenceGenerator(
             name = "role_seq",
@@ -52,6 +47,11 @@ public class Role implements GrantedAuthority {
 //            nullable = false
 //    )
 //    private Long realmId;
+
+    @Override
+    public String getAuthority() {
+        return this.getName();
+    }
 
     @ManyToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "realm_id")

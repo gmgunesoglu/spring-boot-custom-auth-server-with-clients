@@ -1,13 +1,13 @@
-package com.gokhan.resourceserver;
+package com.gokhan.resourceserverandclient;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ResourceServerApplication {
+public class ResourceServerAndClientApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ResourceServerApplication.class, args);
+		SpringApplication.run(ResourceServerAndClientApplication.class, args);
 	}
 
 }

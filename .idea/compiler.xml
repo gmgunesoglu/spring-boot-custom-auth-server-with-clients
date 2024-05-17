@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="resource-server" />
         <module name="client" />
+        <module name="resource-server-and-client" />
         <module name="auth-server" />
       </profile>
     </annotationProcessing>
@@ -18,6 +19,7 @@
       <module name="auth-server" options="-parameters" />
       <module name="client" options="-parameters" />
       <module name="resource-server" options="-parameters" />
+      <module name="resource-server-and-client" options="-parameters" />
     </option>
   </component>
 </project>
