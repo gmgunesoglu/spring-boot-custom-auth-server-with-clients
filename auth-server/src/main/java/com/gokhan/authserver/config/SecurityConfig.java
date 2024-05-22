@@ -1,6 +1,10 @@
 package com.gokhan.authserver.config;
 
 
+import com.gokhan.authserver.authentication.CustomAuthenticationManager;
+import com.gokhan.authserver.authentication.CustomAuthenticationProvider;
+import com.gokhan.authserver.authentication.CustomUsernamePasswordAuthenticationFilter;
+import com.gokhan.authserver.repository.UserRepository;
 import com.gokhan.authserver.service.UserService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -12,9 +16,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,6 +39,7 @@ import org.springframework.security.oauth2.server.authorization.token.*;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 import java.security.KeyPair;
@@ -133,11 +142,20 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
 //        return http.build();
 //    }
 
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CustomAuthenticationProvider authenticationProvider(UserRepository userRepository, PasswordEncoder passwordEncoder){
+        return new CustomAuthenticationProvider(userRepository, passwordEncoder);
+    }
 
 
     @Bean
     @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter)
             throws Exception {
         http
                 .cors(Customizer.withDefaults())
@@ -156,9 +174,12 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                         .loginPage("/super-user-login").permitAll()
                         .loginProcessingUrl("/super-user-logins").permitAll()
                         .defaultSuccessUrl("/users", true)
-                );
+                )
+                .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+
 
 
 
@@ -192,21 +213,18 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
 //                .build();
 //    }
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 
-    @Bean
-    public UserDetailsService getDetailsService() {
-        return userService;
-    }
 
-    @Bean
-    public DaoAuthenticationProvider getAuthenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(getDetailsService());
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        return daoAuthenticationProvider;
-    }
+//    @Bean
+//    public UserDetailsService getDetailsService() {
+//        return userService;
+//    }
+
+//    @Bean
+//    public DaoAuthenticationProvider getAuthenticationProvider() {
+//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+//        daoAuthenticationProvider.setUserDetailsService(getDetailsService());
+//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+//        return daoAuthenticationProvider;
+//    }
 }
