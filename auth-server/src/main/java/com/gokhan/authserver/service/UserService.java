@@ -22,5 +22,5 @@ public interface UserService extends UserDetailsService {
 
     UserDetailDto delete(Long id);
 
-
+    User findByUsername(String username);
 }

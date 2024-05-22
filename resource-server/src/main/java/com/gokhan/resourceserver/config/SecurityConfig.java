@@ -18,19 +18,18 @@ public class SecurityConfig {
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuerUrl;
-//
+
 //    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//    public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationFilter customAuthenticationFilter) throws Exception {
 //        http
 //                .csrf(AbstractHttpConfigurer::disable)
 //                .authorizeHttpRequests(authorize -> authorize
 //                        .anyRequest()
 //                        .authenticated())
 //                .oauth2Login(Customizer.withDefaults())
-////                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 //                .oauth2ResourceServer(oauth2 -> oauth2
-//                        .jwt(jwt -> jwt
-//                                .decoder(JwtDecoders.fromIssuerLocation(issuerUrl))));
+//                        .jwt(jwt -> jwt.decoder(JwtDecoders.fromIssuerLocation(issuerUrl))));
 //        return http.build();
 //    }
 

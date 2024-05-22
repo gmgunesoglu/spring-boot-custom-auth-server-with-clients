@@ -37,4 +37,9 @@ public class TestController {
 
         return "Success  :: " + response.getBody();
     }
+
+    @GetMapping
+    public String showParameters() {
+        return "Secured Urls:\n1: member\n 2: customer\n3: staff";
+    }
 }

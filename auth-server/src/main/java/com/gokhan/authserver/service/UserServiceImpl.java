@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private final UserRolesRepository userRolesRepository;
     private final ClientRepository clientRepository;
     private final RealmRepository realmRepository;
+
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -97,6 +98,11 @@ public class UserServiceImpl implements UserService {
         return userToUserDetailDto(user);
     }
 
+//    public String login(UserLoginDto userLoginDto){
+//        simpleOAuth2TokenGenerator.generate()
+//        return "hmm";
+//    }
+
     @Override
     public User update(Long id, User user) {
         return null;
@@ -122,6 +128,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetailDto delete(Long id) {
         return null;
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("User not found with name: " + username)
+        );
     }
 
     @Override

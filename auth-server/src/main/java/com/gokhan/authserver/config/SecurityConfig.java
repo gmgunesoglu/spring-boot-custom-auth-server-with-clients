@@ -1,19 +1,20 @@
 package com.gokhan.authserver.config;
 
-import com.gokhan.authserver.entity.User;
-import com.gokhan.authserver.service.ClientService;
+
+import com.gokhan.authserver.service.UserService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,16 +23,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationCode;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.*;
+import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -40,7 +37,6 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,9 +44,9 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
-
+public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
     private JWKSource<SecurityContext> jwkSource;
+    private final UserService userService;
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
@@ -84,18 +80,6 @@ public class SecurityConfig {
         };
     }
 
-
-//    @Bean
-//    public OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator(OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer) {
-//        NimbusJwtEncoder jwtEncoder = new NimbusJwtEncoder(jwkSource);
-//        JwtGenerator jwtGenerator = new JwtGenerator(jwtEncoder);
-//        jwtGenerator.setJwtCustomizer(tokenCustomizer);
-//        OAuth2AccessTokenGenerator accessTokenGenerator = new OAuth2AccessTokenGenerator();
-//        DelegatingOAuth2TokenGenerator generator = new DelegatingOAuth2TokenGenerator(jwtGenerator, accessTokenGenerator);
-//        generator.generate(jwkSource);
-//    }
-
-
     @Bean
     @Order(1)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -107,8 +91,6 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                // Redirect to the login page when not authenticated from the
-                // authorization endpoint
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
                                 new LoginUrlAuthenticationEntryPoint("/login"),
@@ -124,6 +106,35 @@ public class SecurityConfig {
         return http.build();
     }
 
+//    @Bean
+//    @Order(2)
+//    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
+//            throws Exception {
+//        http
+//                .cors(Customizer.withDefaults())
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(req -> req.requestMatchers(
+//                        "/oauth2/**",
+//                        "/users/**",
+//                        "/clients/**",
+//                        "/authorizations/**",
+//                        "/realms/**",
+//                        "/roles/**",
+//                        "/resource-servers/**",
+//                        "/policies/**"
+//                        ).permitAll())
+//                .authorizeHttpRequests((authorize) -> authorize
+//                        .anyRequest().authenticated()
+//                )
+//                // Form login handles the redirect to the login page from the
+//                // authorization server filter chain
+//                .formLogin(Customizer.withDefaults());
+//
+//        return http.build();
+//    }
+
+
+
     @Bean
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
@@ -131,23 +142,21 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req -> req.requestMatchers(
-                        "/oauth2/**",
-                        "/users/**",
-                        "/clients/**",
-                        "/authorizations/**",
-                        "/realms/**",
-                        "/roles/**",
-                        "/resource-servers/**",
-                        "/policies/**"
-                        ).permitAll())
-                .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().authenticated()
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers(
+                                "/oauth2/**",
+                                "/users/super-user/**",
+                                "/authorizations/**",
+                                "/login/**",
+                                "/test/**"
+                        ).permitAll()
+                        .anyRequest().hasAnyAuthority("SUPER_USER", "ADMIN")
                 )
-                // Form login handles the redirect to the login page from the
-                // authorization server filter chain
-                .formLogin(Customizer.withDefaults());
-
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/super-user-login").permitAll()
+                        .loginProcessingUrl("/super-user-logins").permitAll()
+                        .defaultSuccessUrl("/users", true)
+                );
         return http.build();
     }
 
@@ -188,4 +197,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public UserDetailsService getDetailsService() {
+        return userService;
+    }
+
+    @Bean
+    public DaoAuthenticationProvider getAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(getDetailsService());
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return daoAuthenticationProvider;
+    }
 }
