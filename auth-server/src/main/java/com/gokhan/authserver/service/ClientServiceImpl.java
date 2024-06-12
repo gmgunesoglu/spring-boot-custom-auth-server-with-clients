@@ -32,12 +32,14 @@ public class ClientServiceImpl implements ClientService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final ClientRepository clientRepository;
     private final RealmRepository realmRepository;
+    private final ClientSettings clientSettings;
 
     @Autowired
-    public ClientServiceImpl(MyLogger logger, ClientRepository clientRepository, RealmRepository realmRepository) {
+    public ClientServiceImpl(MyLogger logger, ClientRepository clientRepository, RealmRepository realmRepository, ClientSettings clientSettings) {
         this.logger = logger;
         this.clientRepository = clientRepository;
         this.realmRepository = realmRepository;
+        this.clientSettings = clientSettings;
     }
 
     // RegisteredClient...
@@ -80,11 +82,12 @@ public class ClientServiceImpl implements ClientService {
                         .addAll(clientRegisterDto.getAuthorizationGrantTypes()))
                 .redirectUris(uri -> uri
                         .add(clientRegisterDto.getRedirectUri()))
-                .postLogoutRedirectUris(uri -> uri
-                        .add(clientRegisterDto.getPostLogoutRedirectUri()))
-                .scopes(scopes -> scopes
-//                        .addAll(clientRegisterDto.getScopes()))
-                        .add("openid")) //scopes disabled
+//                .postLogoutRedirectUris(uri -> uri
+//                        .add(clientRegisterDto.getPostLogoutRedirectUri()))
+//                .scopes(scopes -> scopes
+////                        .addAll(clientRegisterDto.getScopes()))
+//                        .add("openid")) //scopes disabled
+                .scopes(scopes -> scopes.add("openid"))
                 .clientAuthenticationMethods(cam -> cam
                         .add(clientRegisterDto.getClientAuthenticationMethod()))
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
@@ -172,7 +175,8 @@ public class ClientServiceImpl implements ClientService {
                         .addAll(Arrays.stream(client.getScopes().split(",")).toList()))
                 .clientAuthenticationMethods(cam -> cam
                         .addAll(getClientAuthenticationMethods(client)))
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .clientSettings(clientSettings)
+//                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
     }
 
@@ -212,7 +216,7 @@ public class ClientServiceImpl implements ClientService {
                 .clientAuthenticationMethods(getRegisteredClientAuthenticationMethods(registeredClient))
                 .authorizationGrantTypes(getRegisteredClientAuthorizationGrantTypes(registeredClient))
                 .redirectUris(concatStrings(registeredClient.getRedirectUris()))
-                .postLogoutRedirectUris(concatStrings(registeredClient.getPostLogoutRedirectUris()))
+//                .postLogoutRedirectUris(concatStrings(registeredClient.getPostLogoutRedirectUris()))
                 .scopes(concatStrings(registeredClient.getScopes()))
                 .clientSettings(registeredClient.getClientSettings().toString())
                 .tokenSettings(registeredClient.getTokenSettings().toString())
