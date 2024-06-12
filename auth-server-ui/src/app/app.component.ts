@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import {Title} from "@angular/platform-browser";
-import {MyFirstCompComponent} from "./my-first-comp/my-first-comp.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, MyFirstCompComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'developer: gmgunesoglu :)\nMy First Angular Project.';
-  protected readonly Title = Title;
+  title = 'Auth-Server-UI';
+
+  sideBarOpen = true;
+
+  sideBarToggler() {
+    this.sideBarOpen = !this.sideBarOpen;
+  }
 }

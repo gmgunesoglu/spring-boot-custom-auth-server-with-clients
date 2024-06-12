@@ -1,0 +1,53 @@
+/*.page {*/
+/*  color: #000000;*/
+/*  padding: 0 1rem;*/
+/*}*/
+/*.page__header {*/
+/*  min-height: calc(100vh - 178px);*/
+/*  background-color: #669ed6; !* Home divin arka plan rengi *!*/
+/*  margin: 0 -1rem;*/
+/*  font-size: 36px;*/
+/*}*/
+/*.page__content {*/
+/*  min-height: calc(100vh - 178px);*/
+/*  border-radius: 10px;*/
+/*  margin-top: -20rem;*/
+/*  background-color: #ff0000; !* Content divin arka plan rengi *!*/
+/*  font-size: 2rem;*/
+/*}*/
+/*.page__content__data {*/
+/*  background-color: #27a817; !* Data divin arka plan rengi *!*/
+/*  top: 50%;*/
+/*  left: 50%;*/
+/*  transform: translate(-50%, -50%);*/
+/*  color: #FFFFFF; !* Metin rengi *!*/
+/*}*/
+
+.page {
+  color: #000000;
+  padding: 0 1rem;
+}
+
+.page__wrapper {
+  background-color: #f0f0f0;
+  min-height: calc(100vh - 128px);
+  margin: 0 -1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.page__header {
+  font-size: 36px;
+}
+
+.page__content {
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  flex: 1;
+  border-radius: 20px;
+  background-color: #e6e6e6;
+  font-size: 2rem;
+  position: relative;
+}
+
