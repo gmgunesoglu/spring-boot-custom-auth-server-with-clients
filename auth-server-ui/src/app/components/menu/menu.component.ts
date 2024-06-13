@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { HttpParams } from '@angular/common/http';
+import {OauthService} from "../../service/oauth.service";
 
 @Component({
   selector: 'app-menu',
@@ -28,13 +29,22 @@ export class MenuComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loggedIn = !!localStorage.getItem('loggedIn');
   }
 
   onLogin(): void {
     const httpParams = new HttpParams({fromObject: this.params});
     const codeUrl = this.authorize_uri + httpParams.toString();
-    location.href = codeUrl;
     this.loggedIn = true
+    localStorage.setItem('loggedIn', 'true');
+    location.href = codeUrl;
+
+  }
+
+  onLogout(): void {
+    console.log('soon');
+    this.loggedIn = false;
+    localStorage.removeItem('loggedIn');
   }
 
 }

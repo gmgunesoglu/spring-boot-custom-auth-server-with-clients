@@ -5,6 +5,16 @@
     </div>
     <div class="page__content shadow p-3 position-relative">
       User Content Goes Here
+      <button class="btn btn-outline-success" type="button" (click)="getAll()">Get Users</button>
+
+      <div>
+        <h3>Users List</h3>
+        <ul>
+          <li *ngFor="let user of users">
+            {{ user.username }}
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

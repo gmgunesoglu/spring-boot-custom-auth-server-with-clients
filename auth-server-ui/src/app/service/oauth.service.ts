@@ -13,6 +13,7 @@ export class OauthService {
   accessToken: string = "";
   idToken: string = "";
   refreshToken: string = "";
+  loggedIn: boolean = false;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -35,7 +36,6 @@ export class OauthService {
 
     response.subscribe(
       data => {
-
         this.idToken = data.id_token;
         this.accessToken = data.access_token;
         this.refreshToken = data.refresh_token;
@@ -46,8 +46,10 @@ export class OauthService {
         console.log("refresh token", this.refreshToken);
         // this.authInterceptor.setAccessToken(this.accessToken);
         console.log(data);
+        this.loggedIn = true;
       },
       error => {
+        this.loggedIn = false;
         console.log(error);
       }
     )

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../service/user.service';
+import { UserDto, UserRegisterDto } from '../../models/user.model';
 
 @Component({
   selector: 'app-user',
@@ -7,9 +9,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserComponent implements OnInit {
 
-  constructor() { }
+  users: UserDto[] = [];
+  selectedUser: UserDto | null = null;
+  newUser: UserRegisterDto = {
+    username: '',
+    password: '',
+    roles: [],
+    clientName: ''
+  };
+
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
   }
 
+  getAll(): void {
+    this.userService.getAll().subscribe(users => {
+      this.users = users;
+    });
+  }
 }

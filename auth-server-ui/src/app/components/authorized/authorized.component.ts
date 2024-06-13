@@ -27,17 +27,6 @@ export class AuthorizedComponent implements OnInit {
   }
 
   private getToken(): void {
-    // this.oauthService.getToken(this.code).subscribe(
-    //   data => {
-    //
-    //     // this.authInterceptor.setAccessToken(this.accessToken);
-    //
-    //     console.log(data);
-    //   },
-    //   error => {
-    //     console.log(error);
-    //   }
-    // )
     this.oauthService.getToken(this.code);
   }
 
