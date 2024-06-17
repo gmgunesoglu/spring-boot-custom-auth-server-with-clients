@@ -13,3 +13,7 @@ spring:
         jwt:
           issuer-uri: http://localhost:9000
           jwk-set-uri: http://localhost:9000/.well-known/jwks.json
+
+custom:
+  base-url: http://localhost:8080
+

@@ -15,10 +15,9 @@ spring:
             provider: spring
             client-id: demo_client
             client-secret: "client_secret"
-#            client-secret: "secret"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_basic
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "{baseUrl}/login/oauth2/code/reg-client"
             scope: openid
 
 logging:
