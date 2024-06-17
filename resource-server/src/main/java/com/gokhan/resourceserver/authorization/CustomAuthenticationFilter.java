@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,12 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     private final CustomAuthenticationProvider provider;
     private final RestTemplate restTemplate = new RestTemplate();
 
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuerUrl;
+
+    @Value("${custom.base-url}")
+    private String baseUrl;
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -35,11 +42,11 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
             String token = authorizationHeader.substring(7);
             RequestDto requestDto = RequestDto.builder()
                     .uri(request.getRequestURI())
-                    .baseUrl("http://localhost:8080")
+                    .baseUrl(baseUrl)
                     .method(request.getMethod())
                     .token(token).build();
 
-            ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:8000/authorizations/check-token", requestDto, String.class);
+            ResponseEntity<String> result = restTemplate.postForEntity(issuerUrl + "/authorizations/check-token", requestDto, String.class);
             Authentication authentication;
             if (result.getStatusCode() == HttpStatus.OK){
                 authentication = provider.authenticate(new CustomAuthentication(true, "headerKey"));

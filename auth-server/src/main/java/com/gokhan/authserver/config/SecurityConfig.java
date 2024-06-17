@@ -31,9 +31,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationConsentService;
-import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
-import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.*;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
@@ -47,6 +45,7 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -74,6 +73,8 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .oidc(Customizer.withDefaults());
 
         http
+//                .cors(cors -> cors.disable())
+//                .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
@@ -83,11 +84,45 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
 
     @Bean
     @Order(2)
-    public SecurityFilterChain webSecurityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
-        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+    public SecurityFilterChain webSecurityFilterChain(HttpSecurity http, OAuthTokenFilter oAuthTokenFilter) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/authorizations/**",
+                                "/oauth2/**",
+                                "/login/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
                 .formLogin(Customizer.withDefaults())
-                .cors(Customizer.withDefaults());
+                .cors(Customizer.withDefaults())
+                .addFilterBefore(oAuthTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public OAuthTokenFilter oAuthTokenFilter(OAuth2AuthorizationService tokenService, JwtDecoder jwtDecoder){
+        return new OAuthTokenFilter(tokenService, jwtDecoder);
+    }
+
+
+    @Bean
+    public OAuth2AuthorizationService oAuth2AuthorizationService(){
+        return new InMemoryOAuth2AuthorizationService();
+    }
+
+    @Bean
+    OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
+        return context -> {
+            Authentication principal = context.getPrincipal();
+            if (context.getTokenType().getValue().equals("access_token")) {
+                context.getClaims().claim("AuthId", context.getAuthorization().getId());
+                Set<String> authorities = principal.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+                context.getClaims().claim("authorities", authorities)
+                        .claim("user", principal.getName());
+            }
+        };
     }
 
 
@@ -149,11 +184,11 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.debug(false)
-//                .ignoring()
-//                .requestMatchers("/webjars/**", "/images/**", "/css/**", "/assets/**", "/favicon.ico");
-//    }
+    @Bean
+    WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.debug(false)
+                .ignoring()
+                .requestMatchers("/webjars/**", "/images/**", "/css/**", "/assets/**", "/favicon.ico");
+    }
 
 }

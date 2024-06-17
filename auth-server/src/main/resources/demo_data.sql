@@ -39,12 +39,12 @@ DO $$
                   'demo_client',
                   'openid',
                   '$2a$12$Swaeg39C7BtoCSs4gSYTtucVCVrkTSn0WprnfcbP3nwkgOY.Fb9Ji',
-                  'refresh_token,client_credentials,authorization_code',
+                  'authorization_code,refresh_token,client_credentials,refresh_token',
                   'client_secret_basic',
                   'http://127.0.0.1:8090/logout',
                   'http://127.0.0.1:8090/login/oauth2/code/reg-client',
-                  'AbstractSettings {settings={settings.client.require-proof-key=false, settings.client.require-authorization-consent=true}}',
-                  'AbstractSettings {settings={settings.token.reuse-refresh-tokens=true, settings.token.id-token-signature-algorithm=RS256, settings.token.access-token-time-to-live=PT5M, settings.token.access-token-format=org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat@face4f32, settings.token.refresh-token-time-to-live=PT1H, settings.token.authorization-code-time-to-live=PT5M, settings.token.device-code-time-to-live=PT5M}}',
+                  'AbstractSettings {settings={settings.client.require-proof-key=true, settings.client.require-authorization-consent=true}}',
+                  'AbstractSettings {settings={settings.token.reuse-refresh-tokens=true, settings.token.id-token-signature-algorithm=RS256, settings.token.access-token-time-to-live=PT1M, settings.token.access-token-format=org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat@face4f32, settings.token.refresh-token-time-to-live=PT1H, settings.token.authorization-code-time-to-live=PT5M, settings.token.device-code-time-to-live=PT5M}}',
                   'http://127.0.0.1:8090'
                   );
 
