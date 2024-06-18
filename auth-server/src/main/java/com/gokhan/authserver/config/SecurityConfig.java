@@ -37,6 +37,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.token.*;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -65,7 +66,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
 
     @Bean
     @Order(1)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http, AuthenticationEntryPoint authenticationEntryPoint) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
         http
@@ -77,14 +78,23 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
 //                .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
+                        .defaultAuthenticationEntryPointFor(
+                                new LoginUrlAuthenticationEntryPoint("/login"),
+                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+                        ))
+//                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         return http.build();
     }
 
     @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(){
+        return new CustomAuthenticationEntryPoint();
+    }
+
+    @Bean
     @Order(2)
-    public SecurityFilterChain webSecurityFilterChain(HttpSecurity http, OAuthTokenFilter oAuthTokenFilter) throws Exception {
+    public SecurityFilterChain webSecurityFilterChain(HttpSecurity http, OAuthTokenFilter oAuthTokenFilter, AuthenticationEntryPoint authenticationEntryPoint) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -95,6 +105,8 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                         .anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults())
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint))
                 .cors(Customizer.withDefaults())
                 .addFilterBefore(oAuthTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

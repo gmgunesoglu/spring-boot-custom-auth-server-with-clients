@@ -1,112 +1,28 @@
-<!--&lt;!&ndash;<!DOCTYPE html>&ndash;&gt;-->
-<!--&lt;!&ndash;<html xmlns:th="http://www.thymeleaf.org">&ndash;&gt;-->
-<!--&lt;!&ndash;<head>&ndash;&gt;-->
-<!--&lt;!&ndash;    <title>User Login</title>&ndash;&gt;-->
-<!--&lt;!&ndash;    <style>&ndash;&gt;-->
-<!--&lt;!&ndash;        body {&ndash;&gt;-->
-<!--&lt;!&ndash;            font-family: Arial, sans-serif;&ndash;&gt;-->
-<!--&lt;!&ndash;            background: #f7f7f7;&ndash;&gt;-->
-<!--&lt;!&ndash;            display: flex;&ndash;&gt;-->
-<!--&lt;!&ndash;            justify-content: center;&ndash;&gt;-->
-<!--&lt;!&ndash;            align-items: center;&ndash;&gt;-->
-<!--&lt;!&ndash;            height: 100vh;&ndash;&gt;-->
-<!--&lt;!&ndash;            margin: 0;&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;        .login-container {&ndash;&gt;-->
-<!--&lt;!&ndash;            background: white;&ndash;&gt;-->
-<!--&lt;!&ndash;            padding: 2em;&ndash;&gt;-->
-<!--&lt;!&ndash;            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);&ndash;&gt;-->
-<!--&lt;!&ndash;            border-radius: 8px;&ndash;&gt;-->
-<!--&lt;!&ndash;            width: 300px;&ndash;&gt;-->
-<!--&lt;!&ndash;            text-align: center;&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;        h1 {&ndash;&gt;-->
-<!--&lt;!&ndash;            margin-bottom: 1em;&ndash;&gt;-->
-<!--&lt;!&ndash;            color: #333;&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;        .form-group {&ndash;&gt;-->
-<!--&lt;!&ndash;            margin-bottom: 1.5em;&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;        label {&ndash;&gt;-->
-<!--&lt;!&ndash;            display: block;&ndash;&gt;-->
-<!--&lt;!&ndash;            margin-bottom: 0.5em;&ndash;&gt;-->
-<!--&lt;!&ndash;            color: #555;&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;        input[type="text"],&ndash;&gt;-->
-<!--&lt;!&ndash;        input[type="password"] {&ndash;&gt;-->
-<!--&lt;!&ndash;            width: 100%;&ndash;&gt;-->
-<!--&lt;!&ndash;            padding: 0.5em;&ndash;&gt;-->
-<!--&lt;!&ndash;            border: 1px solid #ddd;&ndash;&gt;-->
-<!--&lt;!&ndash;            border-radius: 4px;&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;        button {&ndash;&gt;-->
-<!--&lt;!&ndash;            width: 100%;&ndash;&gt;-->
-<!--&lt;!&ndash;            padding: 0.75em;&ndash;&gt;-->
-<!--&lt;!&ndash;            background: #007bff;&ndash;&gt;-->
-<!--&lt;!&ndash;            border: none;&ndash;&gt;-->
-<!--&lt;!&ndash;            border-radius: 4px;&ndash;&gt;-->
-<!--&lt;!&ndash;            color: white;&ndash;&gt;-->
-<!--&lt;!&ndash;            font-size: 1em;&ndash;&gt;-->
-<!--&lt;!&ndash;            cursor: pointer;&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;        button:hover {&ndash;&gt;-->
-<!--&lt;!&ndash;            background: #0056b3;&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;        .error-message {&ndash;&gt;-->
-<!--&lt;!&ndash;            margin-top: 1em;&ndash;&gt;-->
-<!--&lt;!&ndash;            color: red;&ndash;&gt;-->
-<!--&lt;!&ndash;        }&ndash;&gt;-->
-<!--&lt;!&ndash;    </style>&ndash;&gt;-->
-<!--&lt;!&ndash;</head>&ndash;&gt;-->
-<!--&lt;!&ndash;<body>&ndash;&gt;-->
-<!--&lt;!&ndash;<div class="login-container">&ndash;&gt;-->
-<!--&lt;!&ndash;    <h1>User Login</h1>&ndash;&gt;-->
-<!--&lt;!&ndash;    <form th:action="@{/login}" method="post">&ndash;&gt;-->
-<!--&lt;!&ndash;        <div class="form-group">&ndash;&gt;-->
-<!--&lt;!&ndash;            <label for="username">Username:</label>&ndash;&gt;-->
-<!--&lt;!&ndash;            <input type="text" id="username" name="username" />&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-<!--&lt;!&ndash;        <div class="form-group">&ndash;&gt;-->
-<!--&lt;!&ndash;            <label for="password">Password:</label>&ndash;&gt;-->
-<!--&lt;!&ndash;            <input type="password" id="password" name="password" />&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-<!--&lt;!&ndash;        <div class="form-group">&ndash;&gt;-->
-<!--&lt;!&ndash;            <button type="submit">Login</button>&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-<!--&lt;!&ndash;        <div th:if="${param.error}" class="error-message">&ndash;&gt;-->
-<!--&lt;!&ndash;            Invalid username or password.&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-<!--&lt;!&ndash;    </form>&ndash;&gt;-->
-<!--&lt;!&ndash;</div>&ndash;&gt;-->
-<!--&lt;!&ndash;</body>&ndash;&gt;-->
-<!--&lt;!&ndash;</html>&ndash;&gt;-->
-
-<!--<!DOCTYPE html>-->
-<!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>Please Log In</title>-->
-<!--    <link rel="stylesheet" th:href="@{/css/style.css}">-->
-<!--</head>-->
-<!--<body>-->
-<!--<div class="login-page">-->
-<!--    <div class="form">-->
-<!--        <h1>Spring Boot Tutorial</h1>-->
-<!--        <h2>Please Log In</h2>-->
-<!--        <div class="error" th:if="${param.error}">-->
-<!--            Invalid username and password.</div>-->
-<!--        <div class="error" th:if="${param.logout}">-->
-<!--            You have been logged out.</div>-->
-<!--        <form  class="login-form" th:action="@{/login}" method="post">-->
-<!--            <div>-->
-<!--                <input type="text" name="username" placeholder="Username"/>-->
-<!--            </div>-->
-<!--            <div>-->
-<!--                <input type="password" name="password" placeholder="Password"/>-->
-<!--            </div>-->
-<!--            <input class="button" type="submit" value="Log in" />-->
-<!--        </form>-->
-<!--        <p>Willy De Keyser</p>-->
-<!--    </div>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Please Log In</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="login-page">
+    <div class="form">
+        <h1>Auth Server</h1>
+        <h2>Please Log In</h2>
+        <div class="error" th:if="${param.error}">
+            Invalid username and password.</div>
+        <div class="error" th:if="${param.logout}">
+            You have been logged out.</div>
+        <form  class="login-form" th:action="@{/login}" method="post">
+            <div>
+                <input type="text" name="username" placeholder="Username"/>
+            </div>
+            <div>
+                <input type="password" name="password" placeholder="Password"/>
+            </div>
+            <input class="button" type="submit" value="Log in" />
+        </form>
+    </div>
+</div>
+</body>
+</html>

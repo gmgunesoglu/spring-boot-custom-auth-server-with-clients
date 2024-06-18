@@ -56,8 +56,10 @@ public class OAuthTokenFilter extends OncePerRequestFilter {
                 }
             }catch (JwtValidationException e){
                 logger.error(e.getMessage());
+//                throw new GlobalRuntimeException("Invalid Access Token", HttpStatus.BAD_REQUEST);
             }catch (BadJwtException e){
                 logger.error(e.getMessage());
+//                throw new GlobalRuntimeException("Invalid Access Token", HttpStatus.BAD_REQUEST);
             }catch (Exception e){
                 logger.error(e.getMessage());
             }
