@@ -29,7 +29,9 @@ DO $$
                             post_logout_redirect_uris,
                             redirect_uris,
                             client_settings,
-                            token_settings,
+                            access_token_duration,
+                            refresh_token_duration,
+                            authorization_code_duration,
                             base_url
         ) VALUES (
                   CURRENT_TIMESTAMP,
@@ -44,7 +46,9 @@ DO $$
                   'http://127.0.0.1:8090/logout',
                   'http://127.0.0.1:8090/login/oauth2/code/reg-client',
                   'AbstractSettings {settings={settings.client.require-proof-key=true, settings.client.require-authorization-consent=true}}',
-                  'AbstractSettings {settings={settings.token.reuse-refresh-tokens=true, settings.token.id-token-signature-algorithm=RS256, settings.token.access-token-time-to-live=PT1M, settings.token.access-token-format=org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat@face4f32, settings.token.refresh-token-time-to-live=PT1H, settings.token.authorization-code-time-to-live=PT5M, settings.token.device-code-time-to-live=PT5M}}',
+                  'PT30M',
+                  'PT600M',
+                  'PT48H',
                   'http://127.0.0.1:8090'
                   );
 

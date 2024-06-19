@@ -19,4 +19,7 @@ public class ClientRegisterDto {
     private String redirectUri;
     private String postLogoutRedirectUri;
     private ClientAuthenticationMethod clientAuthenticationMethod;
+    private String accessTokenDuration;
+    private String refreshTokenDuration;
+    private String authorizationCodeDuration;
 }

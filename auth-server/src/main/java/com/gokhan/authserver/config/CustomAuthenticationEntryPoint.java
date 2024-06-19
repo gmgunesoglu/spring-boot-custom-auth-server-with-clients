@@ -30,7 +30,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             response.sendRedirect("/login");
         } else {
             // Authorization başlığı varsa
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized - Token present but invalid");
+            response.sendError(CustomHttpServletResponse.SC_REFRESH_TOKEN, "Unauthorized - Token present but invalid");
         }
     }
 }

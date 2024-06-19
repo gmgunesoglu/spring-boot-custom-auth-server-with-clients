@@ -72,8 +72,10 @@ public class DataInitializer implements CommandLineRunner {
                     .redirectUris("http://127.0.0.1:4200/authorized")
                     .postLogoutRedirectUris("http://127.0.0.1:4200/logout")
                     .scopes("openid,profile")
+                    .refreshTokenDuration("PT300M")
+                    .accessTokenDuration("PT10M")
+                    .authorizationCodeDuration("PT24H")
                     .clientSettings(clientSettings.toString())
-                    .tokenSettings("AbstractSettings {settings={settings.token.reuse-refresh-tokens=true, settings.token.id-token-signature-algorithm=RS256, settings.token.access-token-time-to-live=PT1M, settings.token.access-token-format=org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat@face4f32, settings.token.refresh-token-time-to-live=PT1H, settings.token.authorization-code-time-to-live=PT5M, settings.token.device-code-time-to-live=PT5M}}")
                     .realm(realm)
                     .build();
             clientRepository.save(client);

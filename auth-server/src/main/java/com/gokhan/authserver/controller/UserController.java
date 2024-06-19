@@ -4,6 +4,7 @@ import com.gokhan.authserver.dto.user.*;
 import com.gokhan.authserver.entity.User;
 import com.gokhan.authserver.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,31 +19,37 @@ public class UserController {
 //    private final JwtDecoder jwtDecoder;
 
     @PostMapping("/super-user")
+    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public UserDetailDto addSuperUser(@RequestBody SuperUserRegisterDto superUserRegisterDto) {
         return userService.addSuperUser(superUserRegisterDto);
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public UserDetailDto add(@RequestBody UserRegisterDto userRegisterDto) {
         return userService.add(userRegisterDto);
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public List<UserDto> getAll() {
         return userService.getAll();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public UserDetailDto get(@PathVariable Long id) {
         return userService.get(id);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public User update(@PathVariable Long id, @RequestBody User user) {
         return null;
     }
 
     @PostMapping("/{id}/set-roles")
+    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public UserDetailDto setRoles(@PathVariable Long id, @RequestBody UserSetRoleDto userSetRoleDto) {
         return userService.setRoles(id, userSetRoleDto);
     }

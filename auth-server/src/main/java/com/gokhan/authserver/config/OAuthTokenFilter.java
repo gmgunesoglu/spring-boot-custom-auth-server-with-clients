@@ -50,8 +50,10 @@ public class OAuthTokenFilter extends OncePerRequestFilter {
                     System.out.println(oauth);
                     if (oauth != null){
                         Collection<? extends GrantedAuthority> auths = jwt.getClaim("authorities");
-                        CustomAuthentication auth = new CustomAuthentication(auths);
-                        SecurityContextHolder.getContext().setAuthentication(auth);
+                        if (auths.contains("SUPER_USER")){
+                            CustomAuthentication auth = new CustomAuthentication(auths);
+                            SecurityContextHolder.getContext().setAuthentication(auth);
+                        }
                     }
                 }
             }catch (JwtValidationException e){

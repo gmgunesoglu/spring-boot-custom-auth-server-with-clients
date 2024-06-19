@@ -121,11 +121,25 @@ public class Client implements Serializable {
     private String clientSettings;
 
     @Column(
-            name = "token_settings",
+            name = "access_token_duration",
             nullable = false,
-            length = 2000
+            length = 10
     )
-    private String tokenSettings;
+    private String accessTokenDuration;
+
+    @Column(
+            name = "refresh_token_duration",
+            nullable = false,
+            length = 10
+    )
+    private String refreshTokenDuration;
+
+    @Column(
+            name = "authorization_code_duration",
+            nullable = false,
+            length = 10
+    )
+    private String authorizationCodeDuration;
 
     @OneToOne(targetEntity = Realm.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "realm_id", referencedColumnName = "id", updatable = false, unique = true)

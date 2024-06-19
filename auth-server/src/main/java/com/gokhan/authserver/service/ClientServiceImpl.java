@@ -18,10 +18,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
+import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
@@ -46,9 +51,14 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void save(RegisteredClient registeredClient) {
-        Client client = registeredClientToClient(registeredClient);
-        client.setId(null);
-        clientRepository.save(client);
+        logger.error("This Method Cannot Be Used!");
+        return;
+//        Client client = registeredClientToClient(registeredClient);
+//        client.setId(null);
+//        client.setRefreshTokenDuration(registeredClient.getTokenSettings().getAccessTokenTimeToLive().toMinutes());
+//        client.getRefreshTokenDuration();
+//        client.setAuthorizationCodeDuration();
+//        clientRepository.save(client);
     }
 
     @Override
@@ -94,6 +104,9 @@ public class ClientServiceImpl implements ClientService {
                 .clientIdIssuedAt(Instant.now())
                 .build();
         Client client = registeredClientToClient(registeredClient);
+        client.setAccessTokenDuration(clientRegisterDto.getAccessTokenDuration());
+        client.setRefreshTokenDuration(clientRegisterDto.getRefreshTokenDuration());
+        client.setAuthorizationCodeDuration(clientRegisterDto.getAuthorizationCodeDuration());
         client.setBaseUrl(clientRegisterDto.getBaseUrl());
         client.setRealm(realmRepository.findByName(clientRegisterDto.getRealmName()).orElseThrow(
                 () -> new UsernameNotFoundException("Realm not found with name: " + clientRegisterDto.getRealmName())
@@ -176,7 +189,13 @@ public class ClientServiceImpl implements ClientService {
                 .clientAuthenticationMethods(cam -> cam
                         .addAll(getClientAuthenticationMethods(client)))
                 .clientSettings(clientSettings)
-//                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .tokenSettings(TokenSettings.builder()
+                        .reuseRefreshTokens(true)
+                        .idTokenSignatureAlgorithm(SignatureAlgorithm.RS256)
+                        .accessTokenTimeToLive(Duration.parse(client.getAccessTokenDuration()))
+                        .refreshTokenTimeToLive(Duration.parse(client.getRefreshTokenDuration()))
+                        .authorizationCodeTimeToLive(Duration.parse(client.getAuthorizationCodeDuration()))
+                        .build())
                 .build();
     }
 
@@ -219,7 +238,6 @@ public class ClientServiceImpl implements ClientService {
 //                .postLogoutRedirectUris(concatStrings(registeredClient.getPostLogoutRedirectUris()))
                 .scopes(concatStrings(registeredClient.getScopes()))
                 .clientSettings(registeredClient.getClientSettings().toString())
-                .tokenSettings(registeredClient.getTokenSettings().toString())
                 .build();
     }
 
@@ -308,4 +326,5 @@ public class ClientServiceImpl implements ClientService {
                 .resourceServersName(resourceServersName)
                 .build();
     }
+
 }
