@@ -4,6 +4,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface CustomHttpServletResponse extends HttpServletResponse {
 
-    int SC_REFRESH_TOKEN = 481;
+    int SC_REFRESH_TOKEN = 480;
 
 }

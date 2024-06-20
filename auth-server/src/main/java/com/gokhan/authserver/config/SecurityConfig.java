@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -92,8 +93,8 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     }
 
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(){
-        return new CustomAuthenticationEntryPoint();
+    public AuthenticationEntryPoint authenticationEntryPoint(JwtDecoder jwtDecoder){
+        return new CustomAuthenticationEntryPoint(jwtDecoder);
     }
 
 
@@ -104,24 +105,22 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/authorizations/**",
+                                "/authorizations/check",
+                                "/test/**",
                                 "/oauth2/**",
                                 "/login/**"
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().hasAnyAuthority("SUPER_USER")
                 )
                 .formLogin(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(authenticationEntryPoint))
                 .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .addFilterBefore(oAuthTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
-    @Bean
-    public OAuthTokenFilter oAuthTokenFilter(OAuth2AuthorizationService tokenService, JwtDecoder jwtDecoder){
-        return new OAuthTokenFilter(tokenService, jwtDecoder);
-    }
 
 
     @Bean

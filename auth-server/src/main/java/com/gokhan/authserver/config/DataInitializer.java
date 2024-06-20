@@ -73,7 +73,7 @@ public class DataInitializer implements CommandLineRunner {
                     .postLogoutRedirectUris("http://127.0.0.1:4200/logout")
                     .scopes("openid,profile")
                     .refreshTokenDuration("PT300M")
-                    .accessTokenDuration("PT10M")
+                    .accessTokenDuration("PT1M")
                     .authorizationCodeDuration("PT24H")
                     .clientSettings(clientSettings.toString())
                     .realm(realm)

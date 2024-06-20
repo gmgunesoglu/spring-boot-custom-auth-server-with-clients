@@ -1,5 +1,6 @@
 package com.gokhan.authserver.service;
 
+import com.gokhan.authserver.config.CustomHttpServletResponse;
 import com.gokhan.authserver.dto.RequestDto;
 import com.gokhan.authserver.entity.MethodType;
 import com.gokhan.authserver.entity.Policy;
@@ -9,6 +10,7 @@ import com.gokhan.authserver.exceptionhandling.GlobalRuntimeException;
 import com.gokhan.authserver.repository.PolicyRepository;
 import com.gokhan.authserver.repository.ResourceServerRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -27,25 +29,23 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private final ResourceServerRepository resourceServerRepository;
 
     @Override
-    public String checkToken(HttpServletRequest request, RequestDto requestDto) {
+    public int checkToken(RequestDto requestDto) {
         Jwt jwt = jwtDecoder.decode(requestDto.getToken());
         Map<String, Object> claims = jwt.getClaims();
-        String userName = (String) claims.get("user");
         List<String> authorities = (List<String>) claims.get("authorities");
-//        List<String>  aud = (List<String>) claims.get("aud");
-//        String clientName = aud.getFirst();
-
-        ResourceServer resourceServer = resourceServerRepository.findByBaseUrl(requestDto.getBaseUrl()).orElseThrow(
-                () -> new GlobalRuntimeException("Unregistered Resource Server", HttpStatus.BAD_REQUEST)
-        );
-        Policy policy = policyRepository.findByResourceServerAndUriAndAndMethodType(resourceServer, requestDto.getUri(), requestDto.getMethod()).orElseThrow(
-                () -> new GlobalRuntimeException("Policy not found", HttpStatus.UNAUTHORIZED)
-        );
+        ResourceServer resourceServer = resourceServerRepository.findByBaseUrl(requestDto.getBaseUrl()).get();
+        if (resourceServer == null){
+            return HttpStatus.BAD_REQUEST.value();
+        }
+        Policy policy = policyRepository.findByResourceServerAndUriAndAndMethodType(resourceServer, requestDto.getUri(), requestDto.getMethod()).orElse(null);
+        if (policy == null){
+            return HttpStatus.NOT_FOUND.value();
+        }
         for (Role role : policy.getRoles()) {
             if (authorities.contains(role.getName())) {
-                return "Authorized request";
+                return HttpStatus.OK.value();
             }
         }
-        throw new GlobalRuntimeException("Unauthorized request", HttpStatus.UNAUTHORIZED);
+        return HttpStatus.FORBIDDEN.value();
     }
 }

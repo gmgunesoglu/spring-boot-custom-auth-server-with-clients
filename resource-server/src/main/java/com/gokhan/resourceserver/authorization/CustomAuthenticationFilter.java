@@ -22,7 +22,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
-    private final CustomAuthenticationProvider provider;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
@@ -46,14 +45,21 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
                     .method(request.getMethod())
                     .token(token).build();
 
-            ResponseEntity<String> result = restTemplate.postForEntity(issuerUrl + "/authorizations/check-token", requestDto, String.class);
-            Authentication authentication;
-            if (result.getStatusCode() == HttpStatus.OK){
-                authentication = provider.authenticate(new CustomAuthentication(true, "headerKey"));
-            }else{
-                authentication = provider.authenticate(new CustomAuthentication(false, "headerKey"));
+            try {
+                ResponseEntity<Integer> result = restTemplate.postForEntity(issuerUrl + "/authorizations/check", requestDto, Integer.class);
+                if (result.getBody() == 200) {
+                    CustomAuthentication authentication = new CustomAuthentication(null);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    SecurityContextHolder.clearContext();
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                    return;
+                }
+            } catch (Exception e) {
+                SecurityContextHolder.clearContext();
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                return;
             }
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
     }
