@@ -93,7 +93,7 @@ public class RealmServiceImpl implements RealmService {
             resourceServersName = resourceServerRepository.listNamesByClientId(realm.getClient().getId());
         }
         return RealmDetailDto.builder()
-                .realName(realm.getName())
+                .realmName(realm.getName())
                 .superUserName(realm.getSuperUser().getName())
                 .clientName(clientName)
                 .rolesName(rolesName)

@@ -34,7 +34,8 @@ public class Realm {
     @Column(
             name = "name",
             nullable = false,
-            length = 30
+            length = 30,
+            unique = true
     )
     private String name;
 

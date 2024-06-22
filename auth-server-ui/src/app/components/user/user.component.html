@@ -4,7 +4,34 @@
       <header>Users</header>
     </div>
     <div class="page__content shadow p-3 position-relative">
-      User Content Goes Here
+    <ul>
+      <li><p>user ekleme butonu ve arama butonu olacak</p></li>
+      <li><p>SUPER_USER a bağlı olan kullanıcılar listelenecek</p></li>
+    </ul>
+
+      <div class="user-container">
+        <div class="actions">
+          <input type="text" [(ngModel)]="username" placeholder="Filter by username">
+          <button (click)="findUser()">Filter</button>
+          <button (click)="showCreateUser()">Create</button>
+        </div>
+
+        <table *ngIf="users.length > 0">
+          <tr>
+            <th>Username</th>
+            <th>Realm</th>
+            <th>Client</th>
+            <th>Actions</th>
+          </tr>
+          <tr *ngFor="let user of users">
+            <td>{{ user.username }}</td>
+            <td>{{ user.realmName }}</td>
+            <td>{{ user.clientName }}</td>
+            <td><button (click)="showUserDetail(user.username)">Manage</button></td>
+          </tr>
+        </table>
+      </div>
+
     </div>
   </div>
 </div>

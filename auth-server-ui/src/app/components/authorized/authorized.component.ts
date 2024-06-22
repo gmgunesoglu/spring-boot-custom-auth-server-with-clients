@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {OauthService} from "../../service/oauth.service";
-import {AuthInterceptor} from "../../interceptors/auth.interceptor";
+import {ActivatedRoute, Router} from "@angular/router";
+import {HttpParams} from "@angular/common/http";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-authorized',
@@ -11,34 +12,49 @@ import {AuthInterceptor} from "../../interceptors/auth.interceptor";
 export class AuthorizedComponent implements OnInit {
 
   code = "";
+  authorize_uri = environment.authorize_uri;
+  loginUrl = environment.apiUrl + "/login";
 
+  params: any = {
+    client_id: environment.client_id,
+    redirect_uri: environment.redirect_uri,
+    scope: environment.scope,
+    response_type: environment.response_type,
+    response_mode: environment.response_mode,
+    code_challenge_method: environment.code_challenge_method,
+    code_challenge: environment.code_challenge,
+  }
 
   constructor(
-    private activatedRoute: ActivatedRoute,
     private oauthService: OauthService,
-    // private authInterceptor: AuthInterceptor
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe( data => {
-      this.code = data.code;
-      this.getToken();
+      this.getToken(data.code);
     });
   }
 
-  private getToken(): void {
-    // this.oauthService.getToken(this.code).subscribe(
-    //   data => {
-    //
-    //     // this.authInterceptor.setAccessToken(this.accessToken);
-    //
-    //     console.log(data);
-    //   },
-    //   error => {
-    //     console.log(error);
-    //   }
-    // )
-    this.oauthService.getToken(this.code);
+  private getToken(code: string): void {
+    this.oauthService.getToken(code).subscribe(
+      data => {
+        // Başarılı yanıt durumunda yapılacak işlemler
+        this.code = "Login success, redirecting...";
+        setTimeout(() => {
+          this.router.navigate(['']);
+        }, 2000);
+      },
+      error => {
+        // Hata durumunda yapılacak işlemler
+        this.code = "Only Admin can login here!";
+        sessionStorage.clear();
+        localStorage.clear();
+        setTimeout(() => {
+          location.href = this.loginUrl;
+        }, 2000);
+      }
+    );
   }
-
 }

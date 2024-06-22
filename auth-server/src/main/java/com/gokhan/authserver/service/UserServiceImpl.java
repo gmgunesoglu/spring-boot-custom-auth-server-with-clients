@@ -5,10 +5,14 @@ import com.gokhan.authserver.entity.*;
 import com.gokhan.authserver.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,8 +26,6 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserRolesRepository userRolesRepository;
     private final ClientRepository clientRepository;
-    private final RealmRepository realmRepository;
-
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -73,6 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
+        getRequesterUser();
         List<User> users = userRepository.findAll();
         List<UserDto> userDtoList = new ArrayList<>();
         for(User user : users) {
@@ -84,7 +87,6 @@ public class UserServiceImpl implements UserService {
                         .username(user.getUsername())
                         .clientName(user.getClient() != null ? user.getClient().getName() : null)
                         .realmName(user.getRealm() != null ? user.getRealm().getName() : null)
-                        .roles(roleNames)
                         .build());
         }
         return userDtoList;
@@ -161,5 +163,12 @@ public class UserServiceImpl implements UserService {
             roles.add(role.getName());
         }
         return roles;
+    }
+
+    private Long getRequesterUser(){
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        System.out.println(authentication);
+        return 0L;
     }
 }

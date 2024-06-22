@@ -30,7 +30,7 @@ export class MenuComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onLogin(): void {
+  public onLogin(): void {
     const httpParams = new HttpParams({fromObject: this.params});
     const codeUrl = this.authorize_uri + httpParams.toString();
     location.href = codeUrl;

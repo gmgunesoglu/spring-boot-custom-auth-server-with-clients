@@ -8,7 +8,6 @@ import java.util.List;
 
 @Getter
 public class UserRegisterDto {
-
     private String username;
     private String password;
     private List<String> roles;

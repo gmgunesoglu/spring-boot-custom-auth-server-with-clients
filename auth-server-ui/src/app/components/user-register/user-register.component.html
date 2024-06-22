@@ -1,0 +1,23 @@
+<p>user-register works!</p>
+<div class="user-register-container">
+  <form (ngSubmit)="saveUser()">
+    <div>
+      <label>Username:</label>
+      <input type="text" [(ngModel)]="userRegisterDto.username" name="username" required>
+    </div>
+    <div>
+      <label>Password:</label>
+      <input type="password" [(ngModel)]="userRegisterDto.password" name="password" required>
+    </div>
+    <div>
+      <label>Client Name:</label>
+      <input type="text" [(ngModel)]="userRegisterDto.clientName" name="clientName">
+    </div>
+    <div>
+      <label>Roles:</label>
+      <input type="text" [(ngModel)]="userRegisterDto.roles" name="roles">
+    </div>
+    <button type="submit">Save</button>
+    <button type="button" (click)="goBack()">Back</button>
+  </form>
+</div>

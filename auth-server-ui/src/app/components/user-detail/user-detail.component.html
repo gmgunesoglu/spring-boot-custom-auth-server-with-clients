@@ -1,0 +1,28 @@
+<p>user-detail works!</p>
+<div class="user-detail-container" *ngIf="userDetailDto">
+  <div>
+    <label>Username:</label>
+    <span>{{ userDetailDto.username }}</span>
+  </div>
+  <div>
+    <label>Realm Name:</label>
+    <span>{{ userDetailDto.realmName }}</span>
+  </div>
+  <div>
+    <label>Client Name:</label>
+    <span>{{ userDetailDto.clientName }}</span>
+  </div>
+  <div>
+    <label>Roles:</label>
+    <span>{{ userDetailDto.roles.join(', ') }}</span>
+  </div>
+  <div>
+    <label>Status:</label>
+    <span>{{ userDetailDto.blocked ? 'Blocked' : 'Active' }}</span>
+  </div>
+  <button (click)="blockUser()">Block</button>
+  <button (click)="unblockUser()">Unblock</button>
+  <button (click)="setPassword()">Set Password</button>
+  <button (click)="setRoles()">Set Roles</button>
+  <button (click)="goBack()">Back</button>
+</div>

@@ -1,1 +1,21 @@
-@import "../home/home.component.css";
+/*@import "../home/home.component.css";*/
+
+/*:host {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  height: 100%;*/
+/*}*/
+
+mat-drawer {
+  width: 260px;
+}
+
+/*mat-drawer-container {*/
+/*  height: 100%;*/
+/*}*/
+
+mat-drawer {
+  background: #373A40;
+  padding: 10px;
+}
+

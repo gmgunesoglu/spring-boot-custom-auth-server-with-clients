@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class RealmDetailDto {
     // super user, roller, client lar, resource-server lar...
-    private String realName;
+    private String realmName;
     private String superUserName;
     private String clientName;
     private List<String> rolesName;

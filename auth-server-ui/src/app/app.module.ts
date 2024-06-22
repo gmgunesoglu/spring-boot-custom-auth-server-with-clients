@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {NgModule} from '@angular/core';
+import {HTTP_INTERCEPTORS, HttpClientModule, HttpParams} from '@angular/common/http';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -9,11 +9,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { AuthorizedComponent } from './components/authorized/authorized.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
@@ -27,12 +25,17 @@ import { UserComponent } from './components/user/user.component';
 import { RoleComponent } from './components/role/role.component';
 import { PolicyComponent } from './components/policy/policy.component';
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
+import { UserRegisterComponent } from './components/user-register/user-register.component';
+import { UserDetailComponent } from './components/user-detail/user-detail.component';
+import {FormsModule} from "@angular/forms";
+import {AuthorizedRoutingModule} from "./components/authorized/authorized-routing.module";
+import {DashboardRoutingModule} from "./components/dashboard/dashboard-routing.module";
+import { AuthorizedComponent } from './components/authorized/authorized.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    AuthorizedComponent,
     MenuComponent,
     HeaderComponent,
     SidenavComponent,
@@ -44,7 +47,10 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
     ResourceServerComponent,
     UserComponent,
     RoleComponent,
-    PolicyComponent
+    PolicyComponent,
+    UserRegisterComponent,
+    UserDetailComponent,
+    AuthorizedComponent
   ],
   imports: [
     BrowserModule,
@@ -57,6 +63,9 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
     MatIconModule,
     MatDividerModule,
     MatListModule,
+    FormsModule,
+    AuthorizedRoutingModule,
+    DashboardRoutingModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
@@ -65,4 +74,4 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
   }],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

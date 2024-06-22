@@ -12,15 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
-
     private String username;
     private String realmName;
     private String clientName;
-    private List<String> roles;
-
-    public UserDto(String username, String realmName, String clientName) {
-        this.username = username;
-        this.realmName = realmName;
-        this.clientName = clientName;
-    }
+    private boolean blocked;
 }
