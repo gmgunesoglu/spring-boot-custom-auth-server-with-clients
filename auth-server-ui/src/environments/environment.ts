@@ -7,6 +7,7 @@ export const environment = {
   production: false,
   authorize_uri: 'http://localhost:9000/oauth2/authorize?',
   client_id: 'client',
+  client_secret: 'secret',
   logout_url: 'http://localhost:9000/logout',
   redirect_uri: 'http://127.0.0.1:4200/authorized',
   scope: 'openid',
@@ -16,7 +17,8 @@ export const environment = {
   code_challenge: '8wee4VTVwcMfpCV3NMAXH9LRb8kh3hyw1lw2jeghRq4',
   code_verifier: '13Ia9Z6im4zLtcyShVykfQzZs2GGQBniyBRoG7v2myZ',
   token_url: 'http://localhost:9000/oauth2/token',
-  grant_type: 'authorization_code'
+  grant_type: 'authorization_code',
+  refreshTokenUrl: 'http://localhost:9000/oauth2/token'
 }
 
 /*
