@@ -90,3 +90,5 @@ DO $$
                    (nextval('policy_roles_seq'), policy_id-1, role_id),
                    (nextval('policy_roles_seq'), policy_id, role_id);
     END $$;
+
+select * from users where username LIKE 'ad%';

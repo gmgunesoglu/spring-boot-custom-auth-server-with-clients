@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from "../../service/user.service";
 import {UserDto} from "../../models/user.model";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-user',
@@ -12,7 +13,7 @@ export class UserComponent implements OnInit {
   username: string = '';
   users: UserDto[] = [];
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadAllUsers();
@@ -38,7 +39,10 @@ export class UserComponent implements OnInit {
     // Implement navigation to UserRegisterContainer
   }
 
+  // showUserDetail(): void {
+  //   this.router.navigate(['/users/detail']);
+  // }
   showUserDetail(username: string): void {
-    // Implement navigation to UserDetailContainer
+    this.router.navigate(['/users', username]);
   }
 }

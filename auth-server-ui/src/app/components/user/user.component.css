@@ -1,1 +1,170 @@
 @import "../home/home.component.css";
+
+.content-container {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #e6e6e6;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+}
+
+.actions button,
+.actions input[type="text"] {
+  padding: 10px 15px;
+  margin: 5px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  color: #333;
+}
+
+.actions .create-btn {
+  background-color: #28a745; /* Yeşil renk */
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.actions .create-btn:hover {
+  background-color: #218838;
+}
+
+.actions .filter-btn {
+  background-color: #007BFF; /* Mavi renk */
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.actions .filter-btn:hover {
+  background-color: #0056b3;
+}
+
+.actions .filter-input {
+  height: 42px; /* Butonların yüksekliği ile aynı */
+  padding: 0 15px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table, th, td {
+  border: 1px solid #ccc;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+.manage-cell {
+  text-align: center; /* Manage butonunun hizalaması */
+}
+
+.manage-btn {
+  background-color: #17a2b8; /* Bootstrap'taki info rengi */
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 8px 16px; /* Buton boyutları */
+  transition: background-color 0.3s ease;
+}
+
+.back-btn {
+  background-color: #17a2b8; /* Bootstrap'taki info rengi */
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 8px 16px; /* Buton boyutları */
+  transition: background-color 0.3s ease;
+}
+
+
+.manage-btn:hover {
+  background-color: #138496; /* Daha koyu bir ton */
+}
+
+.button-group button {
+  margin-right: 10px; /* Butonlar arası boşluk */
+  margin-bottom: 10px; /* Butonlar alt boşluk */
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+
+.btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 8px 16px; /* Buton boyutları */
+  transition: background-color 0.3s ease;
+}
+
+.btn.btn-back {
+  background-color: #6c757d; /* Bootstrap'taki secondary rengi */
+  color: white;
+}
+
+.btn.btn-unblock {
+  background-color: #28a745; /* Bootstrap'taki success rengi */
+  color: white;
+}
+
+.btn.btn-set-roles {
+  background-color: #ffc107; /* Bootstrap'taki warning rengi */
+  color: #212529; /* Text rengi */
+}
+
+.btn.btn-block {
+  background-color: #dc3545; /* Bootstrap'taki danger rengi */
+  color: white;
+}
+
+.btn.btn-set-password {
+  background-color: #17a2b8; /* Bootstrap'taki info rengi */
+  color: white;
+}

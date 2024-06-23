@@ -12,7 +12,6 @@ import { MatListModule } from '@angular/material/list';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { MenuComponent } from './components/menu/menu.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -36,7 +35,6 @@ import { AuthorizedComponent } from './components/authorized/authorized.componen
   declarations: [
     AppComponent,
     HomeComponent,
-    MenuComponent,
     HeaderComponent,
     SidenavComponent,
     DashboardComponent,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {OauthService} from "../../service/oauth.service";
+import {AuthService} from "../../service/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
@@ -26,7 +26,7 @@ export class AuthorizedComponent implements OnInit {
   }
 
   constructor(
-    private oauthService: OauthService,
+    private oauthService: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) { }

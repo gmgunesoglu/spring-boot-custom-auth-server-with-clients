@@ -7,7 +7,7 @@ import {
   HttpInterceptor, HttpErrorResponse, HttpParams, HttpHeaders, HttpClient, HttpContext, HttpContextToken
 } from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
-import {OauthService} from "../service/oauth.service";
+import {AuthService} from "../service/auth.service";
 import {Router} from "@angular/router";
 import {catchError, mergeMap} from "rxjs/operators";
 
@@ -24,7 +24,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private oauthService: AuthService
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -63,16 +64,12 @@ export class AuthInterceptor implements HttpInterceptor {
               return next.handle(authReq);
             }),
             catchError(refreshError => {
-              // Token refresh başarısız olursa burada işlemler yapılabilir
-              console.error('Token refresh failed', refreshError)
-              sessionStorage.clear();
-              localStorage.clear();
-              window.location.reload();
+              this.oauthService.logout();
               return throwError(refreshError);
             })
           )
         } else {
-          // Diğer hatalar için hatayı tekrar fırlat
+          this.oauthService.logout();
           return throwError(error);
         }
       })

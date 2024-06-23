@@ -16,42 +16,51 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-//    private final JwtDecoder jwtDecoder;
 
     @PostMapping("/super-user")
-    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public UserDetailDto addSuperUser(@RequestBody SuperUserRegisterDto superUserRegisterDto) {
         return userService.addSuperUser(superUserRegisterDto);
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public UserDetailDto add(@RequestBody UserRegisterDto userRegisterDto) {
         return userService.add(userRegisterDto);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public List<UserDto> getAll() {
         return userService.getAll();
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
-    public UserDetailDto get(@PathVariable Long id) {
-        return userService.get(id);
+    @GetMapping("/list/{username}")
+    public List<UserDto> getAllByUsername(@PathVariable String username) {
+        return userService.getAllByUsername(username);
+    }
+
+
+    @GetMapping("/{username}")
+    public UserDetailDto getByUsername(@PathVariable String username) {
+        return userService.getByUsername(username);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public User update(@PathVariable Long id, @RequestBody User user) {
         return null;
     }
 
     @PostMapping("/{id}/set-roles")
-    @PreAuthorize("hasAnyAuthority('SUPER_USER', 'ROLE_SUPER_USER')")
     public UserDetailDto setRoles(@PathVariable Long id, @RequestBody UserSetRoleDto userSetRoleDto) {
         return userService.setRoles(id, userSetRoleDto);
+    }
+
+    @PostMapping("/block/{username}")
+    public UserDetailDto block(@PathVariable String username){
+        return userService.block(username);
+    }
+
+    @PostMapping("/unblock/{username}")
+    public UserDetailDto unblock(@PathVariable String username){
+        return userService.unblock(username);
     }
 
     // TODO -> silme işlemleri ile ilgili iş lojiği henüz düşünülmedi

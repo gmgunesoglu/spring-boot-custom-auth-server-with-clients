@@ -14,7 +14,11 @@ public interface UserService extends UserDetailsService {
 
     List<UserDto> getAll();
 
+    List<UserDto> getAllByUsername(String username);
+
     UserDetailDto get(Long id);
+
+    UserDetailDto getByUsername(String username);
 
     User update(Long id, User user);
 
@@ -23,4 +27,8 @@ public interface UserService extends UserDetailsService {
     UserDetailDto delete(Long id);
 
     User findByUsername(String username);
+
+    UserDetailDto block(String username);
+
+    UserDetailDto unblock(String username);
 }

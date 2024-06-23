@@ -8,10 +8,22 @@ import {catchError, map} from "rxjs/operators";
 @Injectable({
   providedIn: 'root'
 })
-export class OauthService {
+export class AuthService {
 
   token_url = environment.token_url;
   logout_url = environment.token_url;
+  client_id = environment.client_id;
+  client_secret = environment.client_secret;
+  authorize_uri = environment.authorize_uri;
+  params: any = {
+    client_id: environment.client_id,
+    redirect_uri: environment.redirect_uri,
+    scope: environment.scope,
+    response_type: environment.response_type,
+    response_mode: environment.response_mode,
+    code_challenge_method: environment.code_challenge_method,
+    code_challenge: environment.code_challenge,
+  }
 
   constructor(private httpClient: HttpClient) { }
 
@@ -25,7 +37,7 @@ export class OauthService {
     body.set('scope', environment.scope);
     body.set('code_verifier', environment.code_verifier);
     body.set('code', code);
-    const basic_auth = 'Basic ' + btoa('client:secret');
+    const basic_auth = 'Basic ' + btoa(this.client_id + ':' + this.client_secret);
     const headers_object = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
       'Accept': '*/*',
@@ -72,30 +84,26 @@ export class OauthService {
     return false;
   }
 
-  public logout(): Observable<any> {
-    const params = new HttpParams().set('id_token_hint', sessionStorage.getItem('id_token') ?? '');
-    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  public login(): void {
+    const httpParams = new HttpParams({fromObject: this.params});
+    const codeUrl = this.authorize_uri + httpParams.toString();
+    window.location.href = codeUrl;
+  }
+
+  public logout(): void {
     sessionStorage.clear();
     localStorage.clear();
     this.clearCookies();
-    return this.httpClient.get(this.logout_url, { params, headers }).pipe(
-      catchError(error => {
-        console.error("Error during logout", error);
-        return throwError(error);
-      })
-    );
+    this.login();
   }
 
-  private  clearCookies() {
-    // Tüm cookie'leri listelemek
+  private clearCookies() {
     const cookies = document.cookie.split(";");
-
-    // Her bir cookie'yi silmek
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i];
       const eqPos = cookie.indexOf("=");
       const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + window.location.hostname;
     }
   }
 }

@@ -18,7 +18,7 @@ export class UserService {
   }
 
   findAllByUsername(username: string): Observable<UserDto[]> {
-    return this.http.get<UserDto[]>(`${this.url}?username=${username}`);
+    return this.http.get<UserDto[]>(`${this.url}/list/${username}`);
   }
 
   get(username: string): Observable<UserDetailDto> {
@@ -29,4 +29,12 @@ export class UserService {
     return this.http.post<string>(this.url, userRegisterDto);
   }
 
+  block(username: string | undefined): Observable<UserDetailDto> {
+    const url = `${this.url}/block/${username}`;
+    return this.http.post<UserDetailDto>(url, {});
+  }
+  unblock(username: string | undefined): Observable<UserDetailDto> {
+    const url = `${this.url}/unblock/${username}`;
+    return this.http.post<UserDetailDto>(url, {});
+  }
 }

@@ -75,7 +75,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        getRequesterUser();
         List<User> users = userRepository.findAll();
         List<UserDto> userDtoList = new ArrayList<>();
         for(User user : users) {
@@ -93,9 +92,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDto> getAllByUsername(String username) {
+        List<User> users = userRepository.findAllByUsernameStartingWith(username);
+        List<UserDto> userDtoList = new ArrayList<>();
+        for(User user : users) {
+            List<String> roleNames = new ArrayList<>();
+            for(Role role : user.getRoles()) {
+                roleNames.add(role.getName());
+            }
+            userDtoList.add(UserDto.builder()
+                    .username(user.getUsername())
+                    .clientName(user.getClient() != null ? user.getClient().getName() : null)
+                    .realmName(user.getRealm() != null ? user.getRealm().getName() : null)
+                    .build());
+        }
+        return userDtoList;
+    }
+
+    @Override
     public UserDetailDto get(Long id) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new UsernameNotFoundException("User not found with id: " + id)
+        );
+        return userToUserDetailDto(user);
+    }
+
+    @Override
+    public UserDetailDto getByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("User not found with username: " + username)
         );
         return userToUserDetailDto(user);
     }
@@ -140,6 +165,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDetailDto block(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("User not found with name: " + username)
+        );
+        user.setAccountLocked(true);
+        user = userRepository.save(user);
+        return userToUserDetailDto(user);
+    }
+
+    @Override
+    public UserDetailDto unblock(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("User not found with name: " + username)
+        );
+        user.setAccountLocked(false);
+        user = userRepository.save(user);
+        return userToUserDetailDto(user);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("User not found with username: " + username)
@@ -154,6 +199,7 @@ public class UserServiceImpl implements UserService {
                         user.getRealm().getName() : null)
                 .clientName(user.getClient() != null ?
                         user.getClient().getName() : null)
+                .blocked(user.isAccountLocked())
                 .build();
     }
 

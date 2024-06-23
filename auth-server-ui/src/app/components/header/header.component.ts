@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-// import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import {AuthService} from "../../service/auth.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-header',
@@ -8,15 +9,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  // @Output() toggleSidebarForMe: EventEmitter<any> = new EventEmitter();
 
-  constructor(private router: Router) {}
+  loginUri: string = environment.apiUrl+"/login";
+
+  constructor(
+    private router: Router,
+    private oauthService: AuthService
+    ) {}
 
   ngOnInit(): void {
   }
 
-  // toggleSidebar() {
-  //   this.toggleSidebarForMe.emit();
-  // }
+  logout() {
 
+    this.oauthService.logout();
+  }
 }

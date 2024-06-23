@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpParams} from "@angular/common/http";
+import {AuthService} from "../../service/auth.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +22,7 @@ export class DashboardComponent implements OnInit {
     code_challenge: environment.code_challenge,
   }
 
-  constructor() { }
+  constructor(private oauthService: AuthService) { }
 
   ngOnInit(): void {
     if (sessionStorage.getItem("auth_token")){
@@ -32,10 +33,15 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  // public login(): void {
+  //   const httpParams = new HttpParams({fromObject: this.params});
+  //   const codeUrl = this.authorize_uri + httpParams.toString();
+  //   location.href = codeUrl;
+  // }
+
   public login(): void {
-    const httpParams = new HttpParams({fromObject: this.params});
-    const codeUrl = this.authorize_uri + httpParams.toString();
-    location.href = codeUrl;
+    this.oauthService.login();
   }
+
 
 }

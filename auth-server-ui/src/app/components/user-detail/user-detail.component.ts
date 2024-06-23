@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {UserDetailDto} from "../../models/user.model";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../../service/user.service";
 
 @Component({
@@ -13,7 +13,8 @@ export class UserDetailComponent implements OnInit {
   userDetailDto: UserDetailDto | null = null;
   constructor(
     private route: ActivatedRoute,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -25,12 +26,16 @@ export class UserDetailComponent implements OnInit {
     }
   }
 
-  blockUser(): void {
-    // Implement block user functionality
+  block(): void {
+    this.userService.block(this.userDetailDto?.username).subscribe(user => {
+      this.userDetailDto = user;
+    });
   }
 
-  unblockUser(): void {
-    // Implement unblock user functionality
+  unblock(): void {
+    this.userService.unblock(this.userDetailDto?.username).subscribe(user => {
+      this.userDetailDto = user;
+    });
   }
 
   setPassword(): void {
@@ -42,7 +47,7 @@ export class UserDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    // Implement navigation back to UserContainer
+    this.router.navigate(['/users']);
   }
 
 }

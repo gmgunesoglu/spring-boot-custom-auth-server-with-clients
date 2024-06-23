@@ -19,10 +19,10 @@ const routes: Routes = [
     { path: 'clients', component: ClientComponent },
     { path: 'resource-servers', component: ResourceServerComponent },
     { path: 'users', component: UserComponent },
+    { path: 'users/:username', component: UserDetailComponent },
     { path: 'roles', component: RoleComponent },
     { path: 'policies', component: PolicyComponent },
     { path: 'register', component: UserRegisterComponent },
-    { path: 'detail/:username', component: UserDetailComponent },
     { path: '**', redirectTo: '', pathMatch: 'full' }
   ]}
 ];

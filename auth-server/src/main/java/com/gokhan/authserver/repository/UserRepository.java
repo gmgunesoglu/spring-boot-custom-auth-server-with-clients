@@ -13,6 +13,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
     @Query("SELECT new com.gokhan.authserver.dto.user.UserDto" +
-            "(u.username, u.realm.name, u.client.name) FROM User u")
+            "(u.username, u.realm.name, u.client.name, u.accountLocked) FROM User u")
     List<UserDto> listUserDto();
+
+    @Query("SELECT new com.gokhan.authserver.dto.user.UserDto" +
+            "(u.username, u.realm.name, u.client.name, u.accountLocked) FROM User u " +
+            "WHERE u.username LIKE :username")
+    List<UserDto> findAllByUsername(String username);
+
+    List<User> findAllByUsernameStartingWith(String usernameStartingWith);
 }
