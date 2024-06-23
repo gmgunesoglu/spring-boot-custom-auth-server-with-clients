@@ -30,6 +30,7 @@ import {FormsModule} from "@angular/forms";
 import {AuthorizedRoutingModule} from "./components/authorized/authorized-routing.module";
 import {DashboardRoutingModule} from "./components/dashboard/dashboard-routing.module";
 import { AuthorizedComponent } from './components/authorized/authorized.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { AuthorizedComponent } from './components/authorized/authorized.componen
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    AppRoutingModule,
     BrowserAnimationsModule,
     MatSidenavModule,
     MatToolbarModule,
@@ -63,7 +65,8 @@ import { AuthorizedComponent } from './components/authorized/authorized.componen
     MatListModule,
     FormsModule,
     AuthorizedRoutingModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    NgbModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

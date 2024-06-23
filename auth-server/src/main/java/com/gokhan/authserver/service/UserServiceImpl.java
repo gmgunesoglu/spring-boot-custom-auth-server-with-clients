@@ -2,9 +2,11 @@ package com.gokhan.authserver.service;
 
 import com.gokhan.authserver.dto.user.*;
 import com.gokhan.authserver.entity.*;
+import com.gokhan.authserver.exceptionhandling.GlobalRuntimeException;
 import com.gokhan.authserver.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -125,31 +127,51 @@ public class UserServiceImpl implements UserService {
         return userToUserDetailDto(user);
     }
 
-//    public String login(UserLoginDto userLoginDto){
-//        simpleOAuth2TokenGenerator.generate()
-//        return "hmm";
-//    }
+
 
     @Override
     public User update(Long id, User user) {
         return null;
     }
 
-    @Transactional
     @Override
-    public UserDetailDto setRoles(Long id, UserSetRoleDto userSetRoleDto) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException("User not found with id: " + id)
+    @Transactional
+    public UserDetailDto setRoles(String username, UserSetRoleDto userSetRoleDto) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("User not found with username: " + username)
         );
-        List<UserRoles> userRolesList = userRolesRepository.findByUserId(id);
-        userRolesRepository.deleteAll(userRolesList);
-        for(String strRole : userSetRoleDto.getRoles()) {
-            Role role = roleRepository.findByName(strRole).orElseThrow(
-                    () -> new UsernameNotFoundException("Role not found with name: " + strRole)
-            );
-            userRolesRepository.save(UserRoles.builder().role(role).user(user).build());
+
+        // don't add news if also in olds & chose will be deleted
+        List<String> theRoles = userSetRoleDto.getRoles();
+        List<UserRoles> willBeDelete = new ArrayList<>();
+        List<UserRoles> willBeAdd = new ArrayList<>();
+        for (Role role : user.getRoles()){
+            if (theRoles.contains(role.getName())){
+                theRoles.remove(role.getName());
+            }else{
+                UserRoles userRoles = userRolesRepository.findByUserIdAndRoleId(user.getId(), role.getId()).orElseThrow(
+                        () -> new GlobalRuntimeException("UserRoles not found!", HttpStatus.INTERNAL_SERVER_ERROR)
+                );
+                willBeDelete.add(userRoles);
+            }
         }
-        return userToUserDetailDto(user);
+
+        // save news
+        for (String roleName : theRoles){
+            Role role = roleRepository.findByName(roleName).orElseThrow(
+                    () -> new GlobalRuntimeException("Role not found with name: " + roleName, HttpStatus.BAD_REQUEST)
+            );
+            UserRoles userRoles = UserRoles.builder().user(user).role(role).build();
+            willBeAdd.add(userRoles);
+        }
+
+        // remove olds
+        userRolesRepository.deleteAll(willBeDelete);
+        userRolesRepository.flush();
+        userRolesRepository.saveAllAndFlush(willBeAdd);
+        userRolesRepository.flush();
+        User userWithNewRoles = userRepository.findById(user.getId()).get();
+        return userToUserDetailDto(userWithNewRoles);
     }
 
     @Override

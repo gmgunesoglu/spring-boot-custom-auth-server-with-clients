@@ -63,4 +63,7 @@ public class Role implements GrantedAuthority {
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<Policy> policies;
+
+//    @OneToMany(targetEntity = UserRoles.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<UserRoles> userRoles;
 }

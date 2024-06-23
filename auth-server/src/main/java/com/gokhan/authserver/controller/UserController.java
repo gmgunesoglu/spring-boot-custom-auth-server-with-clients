@@ -48,9 +48,9 @@ public class UserController {
         return null;
     }
 
-    @PostMapping("/{id}/set-roles")
-    public UserDetailDto setRoles(@PathVariable Long id, @RequestBody UserSetRoleDto userSetRoleDto) {
-        return userService.setRoles(id, userSetRoleDto);
+    @PostMapping("/set-roles/{username}")
+    public UserDetailDto setRoles(@PathVariable String username, @RequestBody UserSetRoleDto userSetRoleDto) {
+        return userService.setRoles(username, userSetRoleDto);
     }
 
     @PostMapping("/block/{username}")

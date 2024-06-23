@@ -91,4 +91,5 @@ DO $$
                    (nextval('policy_roles_seq'), policy_id, role_id);
     END $$;
 
-select * from users where username LIKE 'ad%';
+-- INSERT INTO users_roles (id, roles_id, users_id) VALUES (4, 4, 5);
+-- DELETE FROM users_roles WHERE users_id = 5 AND roles_id = 4;

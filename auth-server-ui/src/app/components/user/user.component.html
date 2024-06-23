@@ -4,10 +4,9 @@
       <header>Users</header>
     </div>
     <div class="page__content shadow p-3 position-relative">
-
       <div class="content-container">
         <div class="actions">
-          <button class="create-btn" (click)="showCreateUser()">Create</button>
+          <button class="create-btn" (click)="openCreateUserModal(createUserTemplate)">Create</button>
           <div class="filter-container">
             <input class="filter-input" type="text" [(ngModel)]="username" placeholder="Filter by username">
             <button class="filter-btn" (click)="findUser()">Filter</button>
@@ -28,7 +27,46 @@
           </tr>
         </table>
       </div>
-
     </div>
   </div>
 </div>
+
+<ng-template #createUserTemplate let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title">Create User</h2>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="registerUser()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" class="form-control" [(ngModel)]="newUser.username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-control" [(ngModel)]="newUser.password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="clientName">Client Name</label>
+        <input type="text" id="clientName" class="form-control" [(ngModel)]="newUser.clientName" name="clientName" required>
+      </div>
+      <div class="form-group">
+        <label>Roles</label>
+        <div *ngFor="let role of roles">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" (change)="toggleRole(role.name)" [id]="role.name">
+            <label class="form-check-label" [for]="role.name">{{ role.name }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

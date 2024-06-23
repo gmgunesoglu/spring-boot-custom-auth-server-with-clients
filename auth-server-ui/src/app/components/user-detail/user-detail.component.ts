@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {UserDetailDto} from "../../models/user.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../../service/user.service";
+import {NgbModal, ModalDismissReasons} from "@ng-bootstrap/ng-bootstrap";
+import {RoleService} from "../../service/role.service";
+import {RoleDto} from "../../models/role.model";
 
 @Component({
   selector: 'app-user-detail',
@@ -10,11 +13,18 @@ import {UserService} from "../../service/user.service";
 })
 export class UserDetailComponent implements OnInit {
 
+  roles: RoleDto[] = [];
+  selectedRoles: Set<string> = new Set();
+
+  closeResult: string = "";
+
   userDetailDto: UserDetailDto | null = null;
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal,
+    private roleService: RoleService
   ) {}
 
   ngOnInit(): void {
@@ -42,12 +52,66 @@ export class UserDetailComponent implements OnInit {
     // Implement set password functionality
   }
 
-  setRoles(): void {
-    // Implement set roles functionality
-  }
 
   goBack(): void {
     this.router.navigate(['/users']);
   }
 
+  open(rolesTemplate: TemplateRef<any>) {
+    this.roleService.getAll().subscribe(roles => {
+      this.roles = roles;
+      this.modalService.open(rolesTemplate, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+        this.saveRoles();
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
+    });
+  }
+
+  toggleRole(role: string): void {
+    if (this.selectedRoles.has(role)) {
+      this.selectedRoles.delete(role);
+    } else {
+      this.selectedRoles.add(role);
+    }
+  }
+
+  saveRoles(): void {
+    if (!this.userDetailDto) {
+      console.error('userDetailDto is null or undefined');
+      return;
+    }
+    const selectedRolesArray: string[] = Array.from(this.selectedRoles);
+    this.selectedRoles.clear();
+    console.log('Selected Roles:', selectedRolesArray);
+    this.userService.setRoles(this.userDetailDto.username, selectedRolesArray)
+      .subscribe(
+        updatedUser => {
+          // this.userDetailDto = updatedUser; // Örneğin, güncelleme işlemi
+          this.userService.get(updatedUser.username).subscribe(
+            result => {
+              this.userDetailDto = result;
+            },
+            error => {
+              console.error('Get userDetailDto failed:', error);
+            }
+          )
+        },
+        error => {
+          console.error('Failed to update roles:', error);
+        }
+      );
+  }
+
+  private getDismissReason(reason: any): string {
+    this.selectedRoles.clear();
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
 }

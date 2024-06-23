@@ -128,4 +128,7 @@ public class User implements UserDetails, Principal {
     @ManyToOne(targetEntity = Client.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
+
+//    @OneToMany(targetEntity = UserRoles.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<UserRoles> userRoles;
 }

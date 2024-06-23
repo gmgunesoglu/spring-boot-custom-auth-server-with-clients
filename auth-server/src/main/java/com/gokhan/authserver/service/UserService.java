@@ -22,7 +22,7 @@ public interface UserService extends UserDetailsService {
 
     User update(Long id, User user);
 
-    UserDetailDto setRoles(Long id, UserSetRoleDto userSetRoleDto);
+    UserDetailDto setRoles(String username, UserSetRoleDto userSetRoleDto);
 
     UserDetailDto delete(Long id);
 
